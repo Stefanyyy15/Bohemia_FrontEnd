@@ -1,4 +1,4 @@
-const url1 = "http://localhost:8080/api/users";
+const urlUser = "http://localhost:8080/api/users";
 
 const peticionGet = async (url) => {
     try {
@@ -28,7 +28,7 @@ const mostrarDatos = async (url) => {
     console.log(respuesta);
 }
 
-mostrarDatos(url1);
+mostrarDatos(urlUser);
 
 async function peticionPost(url, data) {
     try {
@@ -54,3 +54,27 @@ async function peticionPost(url, data) {
     return null;
     }
 }
+
+async function agregarUsuario(url) {
+    const nuevoUsuario = {
+        fullname: null,
+        username: document.getElementById("username").value.trim(),
+        mail: document.getElementById("mail").value.trim(),
+        password: document.getElementById("password").value,
+        profilePhoto: null,
+        biography: null
+    };
+    const usuarioCreado = await peticionPost(url, nuevoUsuario);
+
+    if (usuarioCreado) {
+        console.log("Usuario agregado con éxito:", usuarioCreado);
+        alert("Usuario registrado correctamente");
+    } else {
+        alert("Error al registrar el usuario");
+    }
+}
+
+document.getElementById("btn-register").addEventListener("click", () => {
+    agregarUsuario(urlUser);
+    //window.location.href = "./style.css";
+  });

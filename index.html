@@ -15,13 +15,13 @@
             <div class="col1">
                 <div class="contenedorRegistro">
                     <h1>Registrarse</h1>
-                    <h3>Ingrese su nombre</h3>
-                    <input type="text" placeholder="Stefany" id="nombre">
-                    <h3>Ingrese el correo</h3>
-                    <input type="email" placeholder="correo@correo.com" id="correo">
-                    <h3>Ingrese la contraseña</h3>
-                    <input type="password" placeholder="contraseña123" id="contrasena">
-                    <button id="btn-registrar" onclick="registrarUsuario()">Registrar</button>
+                    <form id="userForm">
+                        <input type="text" id="username" placeholder="Nombre de Usuario" required>
+                        <input type="email" id="mail" placeholder="Correo Electrónico" required>
+                        <input type="password" id="password" placeholder="Contraseña" required>
+                        <button type="button" id="btn-register">Register Account</button>
+                    </form>
+                    
                 </div>
             </div>
             </div>
