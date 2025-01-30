@@ -1,0 +1,9 @@
+body{
+    background-color: #f0ece1;
+}
+
+.imagenLogo{
+    display: flex;
+    justify-content: center;
+    width: 10%;
+}

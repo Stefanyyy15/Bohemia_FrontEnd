@@ -1,4 +1,4 @@
-const url1 = "";
+const url1 = "http://localhost:8080/api/users";
 
 const peticionGet = async (url) => {
     try {
@@ -7,7 +7,7 @@ const peticionGet = async (url) => {
             headers: {
                 'Accept': 'aplication/json',
                 'Content-Type': 'aplication/json',
-                'Authorization': ''
+                'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjYW1wdXNjbCIsInN1YiI6IlBhekVuRWxBcmlwb3JvQGVtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3MzgyNTM2OTIsImV4cCI6MTczOTExNzY5Mn0.NF7WvRmMlRBj5qJ5BciFg2nT_Hs02WhhyMLdjSX7euf9Vx9X_zV914fxWPkNuQJJO7qZ0_nYNzh7j3GmLVxmgw'
             }
         });
         console.log('Response status: ', respuesta.status);
