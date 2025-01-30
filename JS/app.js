@@ -4,9 +4,10 @@ window.addEventListener("load", function() {
     setTimeout(() => {
         preloader.style.display = "none";
         document.getElementById("contenido").classList.remove("hidden");
-    }, 500);
+    }, 700);
 });
 
+// PETICIONES A LA API 
 
 const urlUser = "http://localhost:8080/api/users";
 
@@ -65,6 +66,8 @@ async function peticionPost(url, data) {
     }
 }
 
+// FUNCION PARA LA PAGINA REGISTRO
+
 async function agregarUsuario(url) {
     const nuevoUsuario = {
         fullname: null,
@@ -86,5 +89,5 @@ async function agregarUsuario(url) {
 
 document.getElementById("btn-register").addEventListener("click", () => {
     agregarUsuario(urlUser);
-    //window.location.href = "./style.css";
+    window.location.href = "../Index.html";
   });
