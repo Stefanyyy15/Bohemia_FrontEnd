@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,25 @@
     <script src="./app.js" defer></script>
     <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-    <header>
-        <nav class="barrita">
-            <div class="logo">
-                <div class="imagenLogo">
-                    <img src="./background/logoBohemia.png" alt="" height="100vh">
+    <main>
+        <div class="fila">
+            <div class="col1">
+                <div class="contenedorRegistro">
+                    <h1>Registrarse</h1>
+                    <h3>Ingrese su nombre</h3>
+                    <input type="text" placeholder="Stefany" id="nombre">
+                    <h3>Ingrese el correo</h3>
+                    <input type="email" placeholder="correo@correo.com" id="correo">
+                    <h3>Ingrese la contraseña</h3>
+                    <input type="password" placeholder="contraseña123" id="contrasena">
+                    <button id="btn-registrar" onclick="registrarUsuario()">Registrar</button>
                 </div>
             </div>
-        </nav>
-    </header>
+            </div>
+        </div>
+    </main>
 </body>
+
 </html>
