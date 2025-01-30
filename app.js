@@ -5,8 +5,8 @@ const peticionGet = async (url) => {
         const respuesta = await fetch(url, {
             //credentials: 'include',
             headers: {
-                'Accept': 'aplication/json',
-                'Content-Type': 'aplication/json',
+                //'Accept': 'application/json',
+                'Content-Type': 'application/json',
                 'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjYW1wdXNjbCIsInN1YiI6IlBhekVuRWxBcmlwb3JvQGVtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3MzgyNTM2OTIsImV4cCI6MTczOTExNzY5Mn0.NF7WvRmMlRBj5qJ5BciFg2nT_Hs02WhhyMLdjSX7euf9Vx9X_zV914fxWPkNuQJJO7qZ0_nYNzh7j3GmLVxmgw'
             }
         });
