@@ -3,7 +3,7 @@ const url1 = "http://localhost:8080/api/users";
 const peticionGet = async (url) => {
     try {
         const respuesta = await fetch(url, {
-            credentials: 'include',
+            //credentials: 'include',
             headers: {
                 'Accept': 'aplication/json',
                 'Content-Type': 'aplication/json',
