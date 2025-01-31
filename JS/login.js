@@ -62,26 +62,91 @@ async function peticionPost(url, data, token) {
 }
 
 // FUNCION PARA LA PAGINA LOGIN
-async function loginUsuario(email, password) {
-  const usuarios = await peticionGet(urlUser);
-  const usuarioExistente = usuarios.find(users => users.mail === email);
-  if (usuarioExistente && usuarioExistente.password === password) {
-    window.location.href = "../Index.html";
-    return true;
-  } else {
-    alert("Usuario o contraseña incorrectos.");
-    return false;
-  }
-}
+const loginUsuario = async (email, password) => {
+    try {
+        const respuesta = await fetch("http://localhost:8080/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({ mail: email, password: password })
+        });
 
-// BOTONES
+        if (!respuesta.ok) {
+            alert("Usuario o contraseña incorrectos.");
+            return false;
+        }
 
+        const data = await respuesta.json();
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user)); 
+
+        alert("Inicio de sesión exitoso.");
+        window.location.href = "../Index.html"; // Redirige a la página principal
+
+        return true;
+    } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+        alert("Ocurrió un error, intenta nuevamente.");
+        return false;
+    }
+};
+
+// Manejo del botón de login
 document.getElementById("btn-login").addEventListener("click", () => {
-  const email = document.getElementById("mail").value;
-  const password = document.getElementById("password").value;
-  if (email && password) {
-    loginUsuario(email, password);
-  } else {
-    alert("Por favor ingrese su correo y contraseña.");
-  }
+    const email = document.getElementById("mail").value;
+    const password = document.getElementById("password").value;
+
+    if (email && password) {
+        loginUsuario(email, password);
+    } else {
+        alert("Por favor ingrese su correo y contraseña.");
+    }
 });
+
+// Función para obtener el token
+const obtenerToken = () => localStorage.getItem("token");
+
+// Función para hacer peticiones autenticadas con el token
+const peticionAutenticada = async (url, metodo = "GET", data = null) => {
+    const token = obtenerToken();
+    if (!token) {
+        alert("No estás autenticado.");
+        window.location.href = "./login.html";
+        return null;
+    }
+
+    try {
+        const opciones = {
+            method: metodo,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        };
+
+        if (data) {
+            opciones.body = JSON.stringify(data);
+        }
+
+        const respuesta = await fetch(url, opciones);
+
+        if (respuesta.status === 401) {
+            alert("Sesión expirada. Inicia sesión nuevamente.");
+            localStorage.removeItem("token");
+            window.location.href = "./login.html";
+            return null;
+        }
+
+        return await respuesta.json();
+    } catch (error) {
+        console.error("Error en la petición:", error);
+        return null;
+    }
+};
+
+// Ejemplo de uso: Obtener usuarios autenticado
+const obtenerUsuarios = async () => {
+    const data = await peticionAutenticada("http://localhost:8080/api/users");
+    console.log(data);
+};

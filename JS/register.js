@@ -70,7 +70,7 @@ async function peticionPost(url, data) {
 
 async function agregarUsuario(url) {
     const nuevoUsuario = {
-        fullname: null,
+        fullname: document.getElementById("fullname").value.trim(),
         username: document.getElementById("username").value.trim(),
         mail: document.getElementById("mail").value.trim(),
         password: document.getElementById("password").value,
