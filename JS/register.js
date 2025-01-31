@@ -4,7 +4,7 @@ window.addEventListener("load", function() {
     setTimeout(() => {
         preloader.style.display = "none";
         document.getElementById("contenido").classList.remove("hidden");
-    }, 700);
+    }, 1000);
 });
 
 // PETICIONES A LA API 
