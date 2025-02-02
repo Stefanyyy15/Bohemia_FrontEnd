@@ -1,18 +1,18 @@
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
     let preloader = document.getElementById("preloader");
     preloader.classList.add("fade-out");
     setTimeout(() => {
         preloader.style.display = "none";
         document.getElementById("contenido").classList.remove("hidden");
     }, 1000);
-  });
+});
 
 const urlPost = "http://localhost:8080/api/post";
 
 async function peticionPost(url, data) {
     try {
-        const token = localStorage.getItem('token'); 
-        
+        const token = localStorage.getItem('token');
+
         if (!token) {
             alert("No hay un token válido. Inicia sesión.");
             return;
@@ -21,7 +21,7 @@ async function peticionPost(url, data) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': token 
+                'Authorization': token
             },
             body: JSON.stringify(data)
         });
@@ -45,8 +45,8 @@ async function peticionPost(url, data) {
 async function agregarPost(url) {
     const nuevoPost = {
         content: document.getElementById("content").value.trim(),
-        image: document.getElementById("image").value.trim() || null, 
-        user: { id_user: JSON.parse(localStorage.getItem('user')).id_user } 
+        image: document.getElementById("image").value.trim() || null,
+        user: { id_user: JSON.parse(localStorage.getItem('user')).id_user }
     };
     if (!nuevoPost.content) {
         alert("El contenido del post no puede estar vacío.");

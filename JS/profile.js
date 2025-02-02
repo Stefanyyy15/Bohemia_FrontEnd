@@ -1,11 +1,11 @@
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
     let preloader = document.getElementById("preloader");
     preloader.classList.add("fade-out");
     setTimeout(() => {
         preloader.style.display = "none";
         document.getElementById("contenido").classList.remove("hidden");
     }, 1000);
-  });
+});
 
 const obtenerToken = () => localStorage.getItem("token");
 
@@ -55,7 +55,7 @@ const obtenerUsuarios = async () => {
 function showUserProfile() {
     let token = localStorage.getItem('token');
     console.log('Token almacenado:', token);
-    
+
     if (!token) {
         alert("No se encontró un token. Por favor, inicie sesión.");
         window.location.href = '../login/login.html';
@@ -72,53 +72,58 @@ function showUserProfile() {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        console.log('Estado de la respuesta:', response.status);
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Datos recibidos:', data);
-        if (data && data.user) {
-            const user = data.user;
-            document.getElementById('userFullname').textContent = user.fullname;
-            document.getElementById('userUsername').textContent = user.username;
-            document.getElementById('userBiography').textContent = user.biography;
-            if (user.profilePhoto) {
-                document.getElementById('userProfilePhoto').src = user.profilePhoto;
+        .then(response => {
+            console.log('Estado de la respuesta:', response.status);
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
             }
-            
-            document.getElementById('contenido').classList.remove('hidden');
-            document.getElementById('preloader').style.display = 'none';
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        if (error.message.includes('401')) {
-            alert('Sesión expirada. Por favor, inicie sesión nuevamente.');
-            window.location.href = '../login/login.html';
-        } else {
-            alert('Error al cargar el perfil. Por favor, intente nuevamente.');
-        }
-    });
+            return response.json();
+        })
+        .then(data => {
+            console.log('Datos recibidos:', data);
+            if (data && data.user) {
+                const user = data.user;
+                document.getElementById('userFullname').textContent = user.fullname;
+                document.getElementById('userUsername').textContent = user.username;
+                document.getElementById('userBiography').textContent = user.biography;
+                if (user.profilePhoto) {
+                    document.getElementById('userProfilePhoto').src = user.profilePhoto;
+                }
+
+                document.getElementById('contenido').classList.remove('hidden');
+                document.getElementById('preloader').style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            if (error.message.includes('401')) {
+                alert('Sesión expirada. Por favor, inicie sesión nuevamente.');
+                window.location.href = '../login/login.html';
+            } else {
+                alert('Error al cargar el perfil. Por favor, intente nuevamente.');
+            }
+        });
 }
 
+// Llamada a esta función cuando se cargue el perfil
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('userFullname')) {
         showUserProfile();
+        actualizarSeguidores();  // Asegurarse de que los seguidores estén actualizados cuando se cargue el perfil
     }
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('userFullname')) {
         showUserProfile();
     }
 });
+
+
 
 function cerrarSesion() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     window.location.href = "./login.html";
-  }
+}
