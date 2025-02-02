@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bohemia</title>
-    <script src="../JS/index.js" defer></script>
+    <script src="../JS/profile.js" defer></script>
     <link rel="stylesheet" href="../Pages/style.css">
     <link rel="icon" href="/background/logoBohemia.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,14 +37,19 @@
         <div class="ContenedorPost">
             <div class="fila">
                 <div class="col1">
-                    <h1>Nombre</h1>
-                    <h3>Username</h3>
-                    <p>Biography</p>
+                    <h1 id="userFullname">Nombre</h1>
+                    <h3 id="userUsername">Username</h3>
+                    <div class="follows">
+                        <h3 id="followers">985 Followers</h3>
+                        <h3 id="following">56 Following</h3>
+                    </div>
+                    <p id="userBiography">Biography, No se que hacer conmigo la verdad</p>
                 </div>
                 <div class="col2">
-                    <h3>985 Followers</h3>
-                    <h3>56 Following</h3>
-                    <div class="photoPerfil"><img class="img" src="https://img.freepik.com/vector-premium/silueta-perfil-mujer-estilo-vintage-flores-monocromo_643401-153.jpg?w=360" alt=""></div>
+                    <div class="photoPerfil">
+                        <img id="userProfilePhoto" class="img" src="https://img.freepik.com/vector-premium/silueta-perfil-mujer-estilo-vintage-flores-monocromo_643401-153.jpg?w=360" alt="">
+                    </div>
+                    <button id="btn-edit">Edit Profile <i class="fa-solid fa-pen-to-square"></i></button>
                 </div>
             </div>
         </div>
