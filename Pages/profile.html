@@ -29,12 +29,15 @@
             <div class="title">
                 <a href="./profile.html"><img src="../background/tituloProfile.png" alt="" height="60vh"></a>
             </div>
-            <div class="Login">
+            <div class="Login" id="slogan">
+                <h5>Your heart is free. </h5>
+                <br>
+                <h5>Have the courage to follow it.</h5>
             </div>
         </nav>
     </header>
     <main id="contenido" class="hidden">
-        <div class="ContenedorPost">
+        <div class="ContenedorPost" id="contentProfile">
             <div class="fila">
                 <div class="col1">
                     <h1 id="userFullname">Nombre</h1>
@@ -47,16 +50,21 @@
                 </div>
                 <div class="col2">
                     <div class="photoPerfil">
-                        <img id="userProfilePhoto" class="img" src="https://img.freepik.com/vector-premium/silueta-perfil-mujer-estilo-vintage-flores-monocromo_643401-153.jpg?w=360" alt="">
+                        <img id="userProfilePhoto" class="img" src="/background/fotoPerfilPredeterminada.png" alt="">
                     </div>
                     <button id="btn-edit">Edit Profile <i class="fa-solid fa-pen-to-square"></i></button>
                 </div>
             </div>
+            <div class="cerrarSesion">
+                <button id="btn-close" onclick="cerrarSesion()">Close Sesión</button>
+
+            </div>
         </div>
+
         <div class="iconos">
             <a href="../Index.html"><i class="fa-solid fa-house fa-2x"></i></a>
-            <a href=""><i class="fa-solid fa-magnifying-glass fa-2x"></i></a>
-            <a href=""><i class="fa-solid fa-paintbrush fa-2x"></i></a>
+            <a href="/Pages/search.html"><i class="fa-solid fa-magnifying-glass fa-2x"></i></a>
+            <a href="/Pages/post.html"><i class="fa-solid fa-paintbrush fa-2x"></i></a>
             <a href="/Pages/activity.html"><i class="fa-solid fa-bell fa-2x"></i></a>
             <a href="/Pages/profile.html"><i class="fa-solid fa-user fa-2x"></i></a>
         </div>

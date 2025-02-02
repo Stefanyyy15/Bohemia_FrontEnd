@@ -1,16 +1,14 @@
-window.addEventListener("load", function () {
+window.addEventListener("load", function() {
     let preloader = document.getElementById("preloader");
     preloader.classList.add("fade-out");
     setTimeout(() => {
         preloader.style.display = "none";
         document.getElementById("contenido").classList.remove("hidden");
     }, 1000);
-});
+  });
 
-// Función para obtener el token
 const obtenerToken = () => localStorage.getItem("token");
 
-// Función para hacer peticiones autenticadas con el token
 const peticionAutenticada = async (url, metodo = "GET", data = null) => {
     const token = obtenerToken();
     if (!token) {
@@ -48,7 +46,6 @@ const peticionAutenticada = async (url, metodo = "GET", data = null) => {
     }
 };
 
-// Ejemplo de uso: Obtener usuarios autenticado
 const obtenerUsuarios = async () => {
     const data = await peticionAutenticada("http://localhost:8080/api/users");
     console.log(data);
@@ -64,8 +61,6 @@ function showUserProfile() {
         window.location.href = '../login/login.html';
         return;
     }
-
-    // Asegurarnos de que el token no tenga el prefijo 'Bearer' duplicado
     if (token.startsWith('Bearer ')) {
         token = token.slice(7);
     }
@@ -116,10 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Asegurarnos de que el DOM está cargado antes de ejecutar
 document.addEventListener('DOMContentLoaded', () => {
-    // Verificar si estamos en la página de perfil
     if (document.getElementById('userFullname')) {
         showUserProfile();
     }
 });
+
+function cerrarSesion() {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    window.location.href = "./login.html";
+  }

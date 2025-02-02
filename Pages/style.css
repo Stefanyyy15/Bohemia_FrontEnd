@@ -10,13 +10,17 @@
     color: #6f523b;
 }
 #preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
     background: #f0ece1;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    transition: opacity 1s ease-out;
+    transition: opacity 2s ease-out;
 }
 .fade-out {
     opacity: 0;
@@ -119,6 +123,9 @@
     overflow: hidden;
     display: flex;
     justify-content: space-around;
+    position: fixed;
+    width: 100%;
+    background-color: #eeece2;
 }
 .imagenLogo{
     width: 15%;
@@ -137,6 +144,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+#slogan{
+    text-align: center;
+    font-family: 'Glass Antiqua';
+    flex-direction: column;
 }
 #btn-login{
     background-color: #6f523b;
@@ -157,20 +169,62 @@
     border: 2px solid white;
     background-color: white;
     border-radius: 20px;
-    height: 80vh;
     width: 50vw;
     margin-left: 26%;
     margin-top: 3%;
     padding: 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.post {
+    background: #fff;
+    padding: 30px;
+    border-bottom-style: dotted;
+    font-family: 'Glass Antiqua';
+    font-size: 20px;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-family: 'Glass Antiqua';
+}
+
+.post-content {
+    margin-top: 10px;
+    font-family: 'Glass Antiqua';
+}
+
+.post-footer {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-around;
+}
+
+.post-footer button {
+    background: #6f523b;
+    color: white;
+    font-family: 'Glass Antiqua';
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post-footer button:hover {
+    background: #342518;
 }
 .iconos{
     width: 5vw;
-    margin-left: 14%;
-    margin-top: 3%;
     display: flex;
+    margin-top: 7%;
+    margin-left: 90%;
+    height: 75vh;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    position: fixed;
 }
 .iconos a{
     text-decoration: none;
@@ -184,6 +238,9 @@
     background: url("../background/fondoProfileAct.png");
     background-size: cover;
     color: #6f523b;
+}
+#contentProfile{
+    margin-top: 10%;
 }
 .fila{
     display: flex;
@@ -233,7 +290,88 @@
     cursor: pointer;
     color: white;
 }
+#btn-close{
+    background-color: #6f523b;
+    font-family: 'Glass Antiqua';
+    font-size: 15px;
+    height: 5vh;
+    width: 8vw;
+    border: 1px solid #6f523b;
+    border-radius: 20px;
+    cursor: pointer;
+    color: white;
+    margin-top: 10%;
+}
+.cerrarSesion{
+    display: flex;
+    justify-content: center;
+}
 .follows{
     display: flex;
     justify-content: space-between;
+}
+.disabled {
+    pointer-events: none; 
+    opacity: 0.5; 
+    cursor: not-allowed;
+}
+/* CSS PARA LA PAGINA DE POSTS */
+#BodyPost{
+    background: url("/background/fondoPrincipal.png");
+    background-size: cover;
+    color: #6f523b;
+}
+.postCont{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-family: 'Glass Antiqua';
+    gap: 20px;
+
+}
+#btn-create-post{
+    background-color: #6f523b;
+    font-family: 'Glass Antiqua';
+    font-size: 15px;
+    height: 6vh;
+    width: 8vw;
+    border: 1px solid #6f523b;
+    border-radius: 20px;
+    cursor: pointer;
+    color: white;
+    letter-spacing: 1px;
+}
+#postForm{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    width: 80%;
+    align-items: center;
+}
+#content{
+    font-family: 'Glass Antiqua';
+    font-size: 20px;
+    border: 1px solid #6f523b;
+}
+#image{
+    font-family: 'Glass Antiqua';
+    font-size: 20px;
+    border: 1px solid #6f523b;
+    text-align: center;
+}
+#postt{
+    margin-top: 10%;
+    height: 60vh;
+}
+.post-image-container{
+    margin-top: 5%;
+    text-align: center;
+}
+.post-image{
+    max-height: 30vh;
+    max-width: 80vw;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); /* Sombra suave para resaltar */
+  border-radius: 12px; 
 }

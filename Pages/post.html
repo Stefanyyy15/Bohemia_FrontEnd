@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bohemia</title>
-    <script src="/JS/index.js" defer></script>
+    <script src="/JS/post.js" defer></script>
     <link rel="stylesheet" href="/Pages/style.css">
     <link rel="icon" href="/background/logoBohemia.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,36 +17,52 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
-<body id="BodyInicio" >
+<body id="BodyPost">
     <div id="preloader">
-        <img src="./background/imagenCarga.png" alt="Cargando..." height="700vh">
+        <img src="/background/imagenCarga.png" alt="Cargando..." height="700vh">
     </div>
     <header>
         <nav class="nav-bar">
             <div class="imagenLogo">
-                <img src="./background/logoBohemia.png" alt="" height="70vh">
+                <img src="/background/logoBohemia.png" alt="" height="70vh">
             </div>
             <div class="title">
-                <a href="./Index.html"><img src="./background/Titulo.png" alt="" height="60vh"></a>
+                <a href="./Index.html"><img src="/background/tituloPost.png" alt="" height="60vh"></a>
             </div>
             <div class="Login" id="slogan">
-                <h5>Live simply. Dream big.</h5>
+                <h5>Be the moon and inspire people</h5>
                 <br>
-                <h5>Give love. Laugh a lot.</h5>
+                <h5>even when you are far from full.</h5>
             </div>
         </nav>
     </header>
     <main id="contenido" class="hidden">
-        <div class="ContenedorPost">
-            <p>OAPKPOAMSK</p>
+        <div class="ContenedorPost" id="postt">
+            <div class="postCont">
+                <h1>Create a new post</h1>
+                <form id="postForm">
+                    <h4>Write what your soul desires:</h4>
+                    <textarea id="content" rows="4" cols="50" placeholder="You can't control all the events that happen to you, but you can decide not to be influenced by them."></textarea>
+                    <br>
+                    <h4>Put the link of the drawing or painting you want to show (Optional)</h4>
+                    <input type="text" id="image" placeholder="url of your art">
+                    <br>
+                    <button type="button" id="btn-create-post">Create Post <i class="fa-solid fa-paintbrush"></i></button>
+                </form>
+            </div>
+
+        
         </div>
         <div class="iconos">
-            <a href="./Index.html"><i class="fa-solid fa-house fa-2x"></i></a>
+            <a href="/Index.html"><i class="fa-solid fa-house fa-2x"></i></a>
             <a href="/Pages/search.html"><i class="fa-solid fa-magnifying-glass fa-2x"></i></a>
             <a href="/Pages/post.html"><i class="fa-solid fa-paintbrush fa-2x"></i></a>
             <a href="/Pages/activity.html"><i class="fa-solid fa-bell fa-2x"></i></a>
             <a href="/Pages/profile.html"><i class="fa-solid fa-user fa-2x"></i></a>
         </div>
+        </div>
+        <div>
+
     </main>
 
 </body>
