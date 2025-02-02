@@ -6,3 +6,4 @@ window.addEventListener("load", function() {
       document.getElementById("contenido").classList.remove("hidden");
   }, 1000);
 });
+

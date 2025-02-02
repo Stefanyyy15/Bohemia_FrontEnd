@@ -1,4 +1,4 @@
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
     let preloader = document.getElementById("preloader");
     preloader.classList.add("fade-out");
     setTimeout(() => {
@@ -56,8 +56,8 @@ const obtenerUsuarios = async () => {
 
 
 function showUserProfile() {
-    const token = localStorage.getItem('token');
-    console.log('Token almacenado:', token); // Verificar el token
+    let token = localStorage.getItem('token');
+    console.log('Token almacenado:', token);
     
     if (!token) {
         alert("No se encontró un token. Por favor, inicie sesión.");
@@ -65,8 +65,10 @@ function showUserProfile() {
         return;
     }
 
-    // Verificar el formato del token en los headers
-    console.log('Token enviado en headers:', `Bearer ${token}`);
+    // Asegurarnos de que el token no tenga el prefijo 'Bearer' duplicado
+    if (token.startsWith('Bearer ')) {
+        token = token.slice(7);
+    }
 
     fetch('http://localhost:8080/api/users/profile', {
         method: 'GET',
@@ -76,36 +78,48 @@ function showUserProfile() {
         }
     })
     .then(response => {
-        console.log('Código de respuesta:', response.status); // Ver el código de respuesta
+        console.log('Estado de la respuesta:', response.status);
         if (!response.ok) {
-            return response.json().then(errorData => {
-                console.log('Datos de error:', errorData); // Ver el error completo
-                throw new Error(errorData.error || 'Error desconocido');
-            });
+            throw new Error(`Error HTTP: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
-        console.log('Datos recibidos:', data); // Ver los datos si la respuesta es exitosa
+        console.log('Datos recibidos:', data);
         if (data && data.user) {
             const user = data.user;
-            document.getElementById('userFullname').innerText = user.fullname;
-            document.getElementById('userUsername').innerText = user.username;
-            document.getElementById('userBiography').innerText = user.biography;
-            document.getElementById('userProfilePhoto').src = user.profilePhoto;
+            document.getElementById('userFullname').textContent = user.fullname;
+            document.getElementById('userUsername').textContent = user.username;
+            document.getElementById('userBiography').textContent = user.biography;
+            if (user.profilePhoto) {
+                document.getElementById('userProfilePhoto').src = user.profilePhoto;
+            }
             
             document.getElementById('contenido').classList.remove('hidden');
             document.getElementById('preloader').style.display = 'none';
-        } else {
-            throw new Error('No se pudo obtener la información del usuario');
         }
     })
     .catch(error => {
-        console.error("Error al obtener los datos del usuario:", error.message);
-        alert(error.message);
-        if (error.message.includes('Token inválido') || error.message.includes('No autorizado')) {
-            
-            //window.location.href = './Login.html';
+        console.error('Error:', error);
+        if (error.message.includes('401')) {
+            alert('Sesión expirada. Por favor, inicie sesión nuevamente.');
+            window.location.href = '../login/login.html';
+        } else {
+            alert('Error al cargar el perfil. Por favor, intente nuevamente.');
         }
     });
-}   
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('userFullname')) {
+        showUserProfile();
+    }
+});
+
+// Asegurarnos de que el DOM está cargado antes de ejecutar
+document.addEventListener('DOMContentLoaded', () => {
+    // Verificar si estamos en la página de perfil
+    if (document.getElementById('userFullname')) {
+        showUserProfile();
+    }
+});

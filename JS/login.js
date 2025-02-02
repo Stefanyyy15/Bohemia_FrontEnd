@@ -1,4 +1,4 @@
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
     let preloader = document.getElementById("preloader");
     preloader.classList.add("fade-out");
     setTimeout(() => {
@@ -37,28 +37,28 @@ const peticionGet = async (url) => {
 var token = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjYW1wdXNjbCIsInN1YiI6IlBhekVuRWxBcmlwb3JvQGVtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3MzgyNTM2OTIsImV4cCI6MTczOTExNzY5Mn0.NF7WvRmMlRBj5qJ5BciFg2nT_Hs02WhhyMLdjSX7euf9Vx9X_zV914fxWPkNuQJJO7qZ0_nYNzh7j3GmLVxmgw';
 
 async function peticionPost(url, data, token) {
-  try {
-      const respuesta = await fetch(url, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': token
-          },
-          body: JSON.stringify(data)
-      });
-      console.log('Response Status', respuesta.status);
-      if (respuesta.ok) {
-          return await respuesta.json();
-      } else {
-          console.error('Error', respuesta.status);
-          const textoError = await respuesta.text();
-          console.error('Detalle del error:', textoError);
-          return null;
-      }
-  }catch(error){
-      console.error("Error POST", error);
-  return null;
-  }
+    try {
+        const respuesta = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(data)
+        });
+        console.log('Response Status', respuesta.status);
+        if (respuesta.ok) {
+            return await respuesta.json();
+        } else {
+            console.error('Error', respuesta.status);
+            const textoError = await respuesta.text();
+            console.error('Detalle del error:', textoError);
+            return null;
+        }
+    } catch (error) {
+        console.error("Error POST", error);
+        return null;
+    }
 }
 
 // FUNCION PARA LA PAGINA LOGIN
@@ -79,7 +79,7 @@ const loginUsuario = async (email, password) => {
 
         const data = await respuesta.json();
         localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user)); 
+        localStorage.setItem("user", JSON.stringify(data.user));
 
         alert("Inicio de sesión exitoso.");
         window.location.href = "../Index.html"; // Redirige a la página principal

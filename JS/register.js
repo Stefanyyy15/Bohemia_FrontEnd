@@ -1,4 +1,4 @@
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
     let preloader = document.getElementById("preloader");
     preloader.classList.add("fade-out");
     setTimeout(() => {
@@ -60,9 +60,9 @@ async function peticionPost(url, data) {
             console.error('Detalle del error:', textoError);
             return null;
         }
-    }catch(error){
+    } catch (error) {
         console.error("Error POST", error);
-    return null;
+        return null;
     }
 }
 
@@ -90,4 +90,4 @@ async function agregarUsuario(url) {
 document.getElementById("btn-register").addEventListener("click", () => {
     agregarUsuario(urlUser);
     window.location.href = "../Index.html";
-  });
+});
