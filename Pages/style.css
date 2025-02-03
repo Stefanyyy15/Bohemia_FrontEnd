@@ -111,6 +111,50 @@
     margin-top: 15px;
     letter-spacing: 1px;
 }
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#password {
+    width: 100%;
+}
+
+#togglePassword {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#togglePassword i {
+    font-size: 18px; 
+    color: #6f523b;
+}
+.linkLogin{
+    text-decoration: none;
+    color: #6f523b;
+    font-family: 'Glass Antiqua';
+}
+/* Ocultar formularios inicialmente */
+#forgotPasswordForm {
+    display: none;
+    margin-top: 20px;
+}
+
+#newPasswordForm {
+    display: none;
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
 
 /* CSS PARA LA PAGINA DE INICIO */
 #BodyInicio{
@@ -316,6 +360,15 @@
     display: none;
     flex-direction: column;
     align-items: center;
+    position: absolute;
+    width: 30%;
+    margin-right: 30%;
+    margin-top: 10%;
+    background-color: white;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
 }
 .block{
     display: block;
@@ -408,12 +461,8 @@
     border: 1px solid #6f523b;
     text-align: center;
 }
-#postt{
-    margin-top: 10%;
-    height: 60vh;
-}
 .post-image-container{
-    margin-top: 5%;
+    padding: 3%;
     text-align: center;
 }
 .post-image{
@@ -422,7 +471,16 @@
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); 
     border-radius: 12px; 
 }
-
+.post-user-image {
+    width: 2vw;
+    height: 4vh; 
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.post-user-info{
+    display: flex;
+    align-items: center;
+}
 /* SESION DE BUSQUEDA */
 .search-container {
     display: flex;
@@ -442,7 +500,11 @@
     color: #6f523b;
     transition: border-color 0.3s ease;
 }
-
+.search-results-container{
+    margin-top: 5%;
+    font-family: 'Glass Antiqua';
+    font-size: 20px;
+}
 #searchInput:focus {
     outline: none;
     border-color: #342518;
@@ -466,58 +528,90 @@
     background-color: #342518;
 }
 
-#btn-search:focus {
-    outline: none;
-}
-.follow-buttons button {
-    background-color: #6f523b;
-    font-family: 'Glass Antiqua';
-    font-size: 15px;
-    height: 6vh;
-    width: 8vw;
-    border: 1px solid #6f523b;
-    border-radius: 20px;
-    cursor: pointer;
-    color: white;
-    letter-spacing: 1px;
-    margin-top: 10px;
-}
-
-.follow-btn {
-    background-color: #6f523b;
-    color: white;
-}
-
-.unfollow-btn {
-    background-color: #6f523b;
-    color: white;
-    display: none; 
-}
-.follow-buttons button:hover {
-    background-color: #342518;
-}
-.post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-.post-user-info {
+.user-info-wrapper {
     display: flex;
     align-items: center;
+    position: relative;
     gap: 15px;
 }
 
-.post-user-image {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-.post-footer {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
+.profile-image {
+    flex-shrink: 0;
 }
 
+.profile-image img {
+    border-radius: 50%;
+    border: 1px solid #523620;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.user-details {
+    flex-grow: 1;
+}
+
+.user-details h3 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.user-details h4 {
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.9em;
+}
+.follow-section {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.follow-btn, .unfollow-btn {
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: none;
+    background-color: #6f523b;
+    color: white;
+    cursor: pointer;
+    font-family: 'Glass Antiqua';
+}   
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.modal-content textarea,
+.modal-content input {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+}

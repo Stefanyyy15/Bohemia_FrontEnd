@@ -52,7 +52,7 @@ const showUserProfile = () => {
     let token = localStorage.getItem('token');
     if (!token) {
         alert("No se encontró un token. Por favor, inicie sesión.");
-        window.location.href = '../login/login.html';
+        window.location.href = '../login.html';
         return;
     }
     if (token.startsWith('Bearer ')) {
@@ -111,11 +111,6 @@ const showUserProfile = () => {
         });
 }
 
-const  button = document.getElementById("btn-edit");
-button.addEventListener("click", function(){
-    document.getElementById('editProfileForm').style.display = 'none';
-}) 
-
 // CERRAR SESION :P
 function cerrarSesion() {
     localStorage.removeItem("user");
@@ -159,24 +154,130 @@ async function obtenerMisPosts() {
     }
 }
 
-
-function editarPerfil() {
-    document.getElementById('editProfileForm').classList.remove('hidden');
-    const fullnameElement = document.getElementById('userFullname');
-    const usernameElement = document.getElementById('userUsername');
-    const biographyElement = document.getElementById('userBiography');
-    if (fullnameElement && usernameElement && biographyElement) {
-        document.getElementById('editFullname').value = fullnameElement.textContent;
-        document.getElementById('editUsername').value = usernameElement.textContent;
-        document.getElementById('editBiography').value = biographyElement.textContent;
-    } else {
-        console.error("No se encontraron los elementos para editar el perfil.");
+function mostrarMisPosts(posts) {
+    posts.sort((a, b) => new Date(b.publicationDate) - new Date(a.publicationDate));
+    const contenedorPost = document.querySelector(".contenedorMisPosts");
+    if (!contenedorPost) {
+        console.error("No se encontró el contenedor de posts");
+        return;
     }
+
+    contenedorPost.innerHTML = '';
+
+    if (!posts || posts.length === 0) {
+        const mensajeNoPosts = document.createElement("div");
+        mensajeNoPosts.classList.add("no-posts-message");
+        mensajeNoPosts.textContent = "No hay publicaciones para mostrar";
+        contenedorPost.appendChild(mensajeNoPosts);
+        return;
+    }
+
+    posts.forEach(post => {
+        const postDiv = document.createElement("div");
+        postDiv.classList.add("post");
+
+        let imageHTML = post.image
+            ? `<div class="post-image-container"><img src="${post.image}" alt="Imagen del post" class="post-image"/></div>`
+            : '';
+
+        let userImage = post.user.profilePicture
+            ? `<img src="${post.user.profilePicture}" alt="Foto de perfil" class="post-user-image"/>`
+            : `<img src="/background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="post-user-image"/>`;
+
+        postDiv.innerHTML = `
+            <div class="post-header">
+                <div class="post-user-info">
+                    ${userImage}
+                    <span class="post-user">${post.user.username}</span>
+                </div>
+                <span class="post-date">${new Date(post.publicationDate).toLocaleString()}</span>
+            </div>
+            <div class="post-content">
+                <p>${post.content}</p>
+            </div>
+            ${imageHTML}
+            <div class="post-footer">
+                <!-- Usamos data-post-id para almacenar el postId -->
+                <button class="btn-edit" data-post-id="${post.id_post}"><i class="fa fa-edit"></i> Edit</button>
+                <button class="btn-delete" data-post-id="${post.id_post}"><i class="fa fa-trash"></i> Delete</button>
+            </div>
+        `;
+
+        contenedorPost.appendChild(postDiv);
+
+        const btnEdit = postDiv.querySelector('.btn-edit');
+        btnEdit.addEventListener('click', (e) => {
+            const postId = e.target.closest('button').dataset.postId; // Obtener el postId del botón
+            console.log("Post ID:", postId);  // Verifica que el postId esté presente
+            if (!postId) {
+                console.error("No se encontró el postId.");
+                return;
+            }
+            editarPost(postId); // Llamar a la función de edición con el postId
+        });
+
+
+
+        // Añadimos el evento de eliminación para cada botón
+        const btnDelete = postDiv.querySelector('.btn-delete');
+        btnDelete.addEventListener('click', (e) => {
+            const postId = e.target.closest('button').dataset.postId; // Obtener el postId del botón
+            eliminarPost(postId); // Llamar a la función de eliminación con el postId
+        });
+    });
 }
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('userFullname')) {
+        showUserProfile();
+        obtenerMisPosts();
+    }
+});
+
+async function eliminarPerfil() {
+    const token = obtenerToken();
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || !user.id_user) {
+        alert("No se pudo obtener el ID del usuario.");
+        return;
+    }
+
+    const userId = user.id_user;
+    const confirmacion = confirm("¿Are you sure you want to delete your profile? This action is irreversible.");
+    if (!confirmacion) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+            alert("Tu perfil ha sido eliminado correctamente.");
+            window.location.href = "../login.html";
+        } else {
+            const errorData = await response.json();
+            alert(`Error al eliminar el perfil: ${errorData.message || "Intenta nuevamente."}`);
+        }
+    } catch (error) {
+        console.error("Error al eliminar el perfil:", error);
+        alert("Hubo un error. Intenta nuevamente.");
+    }
+}
+
+// EDITAR PERFIL MUAJAJ
+
+
 async function guardarCambios() {
-    const token = obtenerToken(); 
+    const token = obtenerToken();
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id_user) {
         alert("No se pudo obtener el ID del usuario.");
@@ -235,12 +336,12 @@ async function guardarCambios() {
             if (usernameElement) usernameElement.textContent = data.username;
             if (emailElement) emailElement.textContent = data.mail;
             if (biographyElement) biographyElement.textContent = data.biography;
-            
+
             if (profilePhotoElement && data.profilePhoto) {
                 profilePhotoElement.src = data.profilePhoto;
             }
 
-            document.getElementById('editProfileForm').classList.add('hidden');
+            document.getElementById('editProfileForm').style.display = "none";
 
             alert("Perfil actualizado correctamente.");
         }
@@ -250,135 +351,196 @@ async function guardarCambios() {
     }
 }
 
+
 document.addEventListener('DOMContentLoaded', function () {
-    guardarCambios();
+    const btnEdit = document.getElementById('btn-edit');
+    const saveChangesBtn = document.getElementById('saveChanges');
+    const cancelEditBtn = document.getElementById('cancelEdit');
+
+    if (btnEdit) {
+        btnEdit.addEventListener('click', editarPerfil);
+    }
+
+    if (saveChangesBtn) {
+        saveChangesBtn.addEventListener('click', guardarCambios);
+    }
+
+    if (cancelEditBtn) {
+        cancelEditBtn.addEventListener('click', cancelarEdicion);
+    }
 });
 
+function editarPerfil() {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+        const editFullnameInput = document.getElementById('editFullname');
+        const editUsernameInput = document.getElementById('editUsername');
+        const editBiographyInput = document.getElementById('editBiography');
+        const editEmailInput = document.getElementById('editEmail');
+        if (editFullnameInput) editFullnameInput.placeholder = user.fullname || 'Nombre completo';
+        if (editUsernameInput) editUsernameInput.placeholder = user.username || 'Nombre de usuario';
+        if (editBiographyInput) editBiographyInput.placeholder = user.biography || 'Biografía';
+        if (editEmailInput) editEmailInput.placeholder = user.mail || 'Correo electrónico';
+
+        if (editFullnameInput) editFullnameInput.value = user.fullname || '';
+        if (editUsernameInput) editUsernameInput.value = user.username || '';
+        if (editBiographyInput) editBiographyInput.value = user.biography || '';
+        if (editEmailInput) editEmailInput.value = user.mail || '';
+    } else {
+        console.error("No se encontraron datos de usuario en localStorage");
+    }
+    const editProfileForm = document.getElementById('editProfileForm');
+    if (editProfileForm) {
+        editProfileForm.style.display = 'block';
+    }
+}
 
 function cancelarEdicion() {
     const editProfileForm = document.getElementById('editProfileForm');
     if (editProfileForm) {
-        editProfileForm.classList.add('hidden');
+        editProfileForm.style.display = "none";
     } else {
         console.error('No se encontró el formulario de edición');
     }
 }
 
+// POSSSSSSSTTTT
 
-document.addEventListener('DOMContentLoaded', () => {
-    const btnEdit = document.getElementById('btn-edit');
-    const btnSaveChanges = document.getElementById('saveChanges');
-    const btnCancelEdit = document.getElementById('cancelEdit');
-
-    if (btnEdit) {
-        btnEdit.addEventListener('click', () => {
-            document.getElementById('editProfileForm').classList.remove('hidden');
+// Función para editar un post
+async function editarPost(postId) {
+    try {
+        // Obtener los detalles del post
+        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
         });
+
+        if (!response.ok) {
+            throw new Error('No se pudo obtener los detalles del post');
+        }
+
+        const post = await response.json();
+
+        // Crear un modal o formulario de edición
+        const editModal = document.getElementById('editPostModal');
+        if (!editModal) {
+            console.error('No se encontró el modal de edición');
+            return;
+        }
+
+        // Llenar el formulario de edición con los datos actuales del post
+        document.getElementById('editPostContent').value = post.content;
+        document.getElementById('editPostImage').value = post.image || '';
+
+        // Guardar el ID del post para usar en la actualización
+        editModal.dataset.postId = postId;
+
+        // Mostrar el modal de edición
+        editModal.style.display = 'block';
+
+    } catch (error) {
+        console.error('Error al cargar los detalles del post:', error);
+        alert('No se pudo cargar el post para edición');
     }
-
-    if (btnSaveChanges) {
-        btnSaveChanges.addEventListener('click', guardarCambios);
-    }
-
-    if (btnCancelEdit) {
-        btnCancelEdit.addEventListener('click', cancelarEdicion);
-    }
-});
-
-
-function mostrarMisPosts(posts) {
-    const contenedorPost = document.querySelector(".contenedorMisPosts");
-    if (!contenedorPost) {
-        console.error("No se encontró el contenedor de posts");
-        return;
-    }
-
-    contenedorPost.innerHTML = ''; 
-
-    if (!posts || posts.length === 0) {
-        const mensajeNoPosts = document.createElement("div");
-        mensajeNoPosts.classList.add("no-posts-message");
-        mensajeNoPosts.textContent = "No hay publicaciones para mostrar";
-        contenedorPost.appendChild(mensajeNoPosts);
-        return;
-    }
-
-    posts.forEach(post => {
-        const postDiv = document.createElement("div");
-        postDiv.classList.add("post");
-
-        let imageHTML = post.image 
-            ? `<div class="post-image-container"><img src="${post.image}" alt="Imagen del post" class="post-image"/></div>`
-            : '';
-
-        let userImage = post.user.profilePicture 
-            ? `<img src="${post.user.profilePicture}" alt="Foto de perfil" class="post-user-image"/>`
-            : `<img src="/background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="post-user-image"/>`;
-
-        postDiv.innerHTML = `
-            <div class="post-header">
-                <div class="post-user-info">
-                    ${userImage}
-                    <span class="post-user">${post.user.username}</span>
-                </div>
-                <span class="post-date">${new Date(post.publicationDate).toLocaleString()}</span>
-            </div>
-            <div class="post-content">
-                <p>${post.content}</p>
-            </div>
-            ${imageHTML}
-            <div class="post-footer">
-                <button class="btn-edit" onclick="editarPost(${post.id_post})"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn-delete" onclick="eliminarPost(${post.id_post})"><i class="fa fa-trash"></i> Delete</button>
-            </div>
-        `;
-
-        contenedorPost.appendChild(postDiv);
-    });
 }
 
+// Función para eliminar un post
+async function eliminarPost(postId) {
+    const confirmacion = confirm('¿Estás seguro de que quieres eliminar este post?');
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('userFullname')) {
-        showUserProfile();
-        obtenerMisPosts();
-    }
-});
-
-async function eliminarPerfil() {
-    const token = obtenerToken(); 
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user || !user.id_user) {
-        alert("No se pudo obtener el ID del usuario.");
-        return;
-    }
-
-    const userId = user.id_user;
-    const confirmacion = confirm("¿Are you sure you want to delete your profile? This action is irreversible.");
     if (!confirmacion) {
         return;
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
-            method: "DELETE",
+        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+            method: 'DELETE',
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         });
 
-        if (response.ok) {
-            localStorage.removeItem("user");
-            localStorage.removeItem("token");
-            alert("Tu perfil ha sido eliminado correctamente.");
-            window.location.href = "../login.html";
-        } else {
-            const errorData = await response.json();
-            alert(`Error al eliminar el perfil: ${errorData.message || "Intenta nuevamente."}`);
+        if (!response.ok) {
+            throw new Error('No se pudo eliminar el post');
         }
+
+        // Recargar los posts
+        obtenerMisPosts();
+
+        alert('Post eliminado correctamente');
+
     } catch (error) {
-        console.error("Error al eliminar el perfil:", error);
-        alert("Hubo un error. Intenta nuevamente.");
+        console.error('Error al eliminar el post:', error);
+        alert('No se pudo eliminar el post');
     }
 }
+
+// Modal para edición de post
+function createEditPostModal() {
+    const modal = document.createElement('div');
+    modal.id = 'editPostModal';
+    modal.className = 'modal';
+    modal.style.display = 'none';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h2>Edit Post</h2>
+            <textarea id="editPostContent" rows="4" cols="50"></textarea>
+            <input type="text" id="editPostImage" placeholder="Image URL (optional)">
+            <div class="modal-buttons">
+                <button id="saveEditPost">Save Changes</button>
+                <button id="cancelEditPost">Cancel</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Evento para guardar cambios
+    document.getElementById('saveEditPost').addEventListener('click', async () => {
+        const postId = modal.dataset.postId;
+        const nuevoContenido = document.getElementById('editPostContent').value;
+        const nuevaImagen = document.getElementById('editPostImage').value;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    content: nuevoContenido,
+                    image: nuevaImagen
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('No se pudo actualizar el post ${response.status}');
+            }
+
+            // Cerrar el modal
+            modal.style.display = 'none';
+
+            // Recargar los posts
+            obtenerMisPosts();
+
+            alert('Post updated successfully');
+
+        } catch (error) {
+            console.error('Error al actualizar el post:', error);
+            alert('Could not update the post');
+        }
+    });
+
+    // Evento para cancelar
+    document.getElementById('cancelEditPost').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+}
+
+// Añadir el modal cuando el DOM esté cargado
+document.addEventListener('DOMContentLoaded', createEditPostModal);

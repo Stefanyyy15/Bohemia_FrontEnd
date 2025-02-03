@@ -7,6 +7,25 @@ window.addEventListener("load", function () {
     }, 1000);
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const passwordField = document.getElementById("password");
+    const toggleButton = document.getElementById("togglePassword");
+    const toggleIcon = document.getElementById("toggleIcon");
+
+    toggleButton.addEventListener("click", function () {
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        } else {
+            passwordField.type = "password";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        }
+    });
+});
+
+
 // PETICIONES A LA API 
 
 const urlUser = "http://localhost:8080/api/users";

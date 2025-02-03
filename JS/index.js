@@ -11,18 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
   verificarSesion();
 });
 
-function verificarSesion() {
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  if (!user || !user.token) {
-      window.location.href = "../Pages/login.html";
-  } else {
-      document.getElementById("contenido").classList.remove("hidden");
-      document.querySelectorAll(".iconos a").forEach((btn) => {
-          btn.classList.remove("disabled");
-      });
-  }
-}
 
 const urlPosts = "http://localhost:8080/api/post";  
 
@@ -63,8 +51,8 @@ function mostrarPosts(posts) {
                           </div>`;
         }
 
-        let userImage = post.user.profilePicture 
-            ? `<img src="${post.user.profilePicture}" alt="Foto de perfil" class="post-user-image"/>`
+        let userImage = post.user.profilePhoto 
+            ? `<img src="${post.user.profilePhoto}" alt="Foto de perfil" class="post-user-image"/>`
             : `<img src="/background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="post-user-image"/>`;
         const fechaLocal = new Date(post.publicationDate).toLocaleString("es-ES", {
             hour12: true

@@ -34,50 +34,54 @@ const searchUsers = async (event) => {
     }
 };
 
-const displaySearchResults = (user) => {
-    const resultsContainer = document.getElementById("searchResults");
-    resultsContainer.innerHTML = "";
+    const displaySearchResults = (user) => {
+        const resultsContainer = document.getElementById("searchResults");
+        resultsContainer.innerHTML = "";
 
-    if (!user) {
-        resultsContainer.innerHTML = "<p>No se encontró ningún usuario.</p>";
-        return;
-    }
+        if (!user) {
+            resultsContainer.innerHTML = "<p>No se encontró ningún usuario.</p>";
+            return;
+        }
 
-    const currentUserId = obtenerIdUsuarioDesdeToken(obtenerToken());
+        const currentUserId = obtenerIdUsuarioDesdeToken(obtenerToken());
+        const showFollowButtons = currentUserId !== user.id_user;
 
-    // No mostrar botones de seguir si el usuario encontrado es el mismo usuario actual
-    const showFollowButtons = currentUserId !== user.id_user;
+        const userElement = document.createElement("div");
+        userElement.classList.add("user-result");
 
-    const userElement = document.createElement("div");
-    userElement.classList.add("user-result");
-
-    userElement.innerHTML = `
-        <div class="user-info">
-            <h3>${user.fullname} (@${user.username})</h3>
-            <p>${user.biography || "Sin biografía"}</p>
-            <img src="${user.profilePhoto || '/background/fotoPerfilPredeterminada.png'}" 
-                alt="Foto de perfil" width="50">
-        </div>
-        ${showFollowButtons ? `
-            <div class="follow-buttons">
-                <button id="followButton_${user.id_user}" 
-                        onclick="seguirUsuario(${user.id_user})" 
-                        class="follow-btn">Seguir</button>
-                <button id="unfollowButton_${user.id_user}" 
-                        onclick="dejarDeSeguirUsuario(${user.id_user})" 
-                        class="unfollow-btn" 
-                        style="display: none;">Dejar de seguir</button>
+        userElement.innerHTML = `
+        <div class="user-profile-container">
+            <div class="user-info-wrapper">
+                <div class="profile-image">
+                    <img src="${user.profilePhoto || '/background/fotoPerfilPredeterminada.png'}" 
+                        alt="Foto de perfil" width="50">
+                </div>
+                <div class="user-details">
+                    <h3>${user.fullname}</h3>
+                    <h4>@${user.username}</h4>
+                </div>
+                ${showFollowButtons ? `
+                    <div class="follow-section">
+                        <button id="followButton_${user.id_user}" 
+                                onclick="seguirUsuario(${user.id_user})" 
+                                class="follow-btn">Seguir</button>
+                        <button id="unfollowButton_${user.id_user}" 
+                                onclick="dejarDeSeguirUsuario(${user.id_user})" 
+                                class="unfollow-btn" 
+                                style="display: none;">Dejar de seguir</button>
+                    </div>
+                ` : ''}
             </div>
-        ` : ''}
-        <hr>
-    `;
+            <hr>
+        </div>
+    `;  
 
-    resultsContainer.appendChild(userElement);
+        resultsContainer.appendChild(userElement);
 
-    if (showFollowButtons) {
-        verificarEstadoSeguimiento(user.id_user);
-    }
-};
+        if (showFollowButtons) {
+            verificarEstadoSeguimiento(user.id_user);
+        }
+    };
 
 function obtenerIdUsuarioDesdeToken(token) {
     if (!token) return null;
@@ -134,7 +138,7 @@ async function seguirUsuario(targetUserId) {
 
     if (!token || !currentUserId) {
         alert("No estás autenticado.");
-        window.location.href = "../Pages/login.html";
+        window.location.href = "../login.html";
         return;
     }
 
@@ -207,8 +211,6 @@ async function actualizarContadoresSeguidores() {
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const userData = await response.json();
-
-        // Actualizar contadores en el DOM si existen los elementos
         const followersCount = document.getElementById('followersCount');
         const followingCount = document.getElementById('followingCount');
 
@@ -223,7 +225,6 @@ async function actualizarContadoresSeguidores() {
     }
 }
 
-// Asegurarse de que los contadores se actualicen cuando se carga el perfil
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('userFullname')) {
         showUserProfile();
