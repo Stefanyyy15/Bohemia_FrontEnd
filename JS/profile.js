@@ -218,13 +218,20 @@ async function guardarCambios() {
 
         if (data) {
             localStorage.setItem("user", JSON.stringify(data));
-            document.getElementById('userFullname').textContent = data.fullname;
-            document.getElementById('userUsername').textContent = data.username;
-            document.getElementById('userEmail').textContent = data.mail;
-            document.getElementById('userBiography').textContent = data.biography;
+
+            const fullnameElement = document.getElementById('userFullname');
+            const usernameElement = document.getElementById('userUsername');
+            const emailElement = document.getElementById('userEmail');
+            const biographyElement = document.getElementById('userBiography');
+            const profilePhotoElement = document.getElementById('userProfilePhoto');
+
+            if (fullnameElement) fullnameElement.textContent = data.fullname;
+            if (usernameElement) usernameElement.textContent = data.username;
+            if (emailElement) emailElement.textContent = data.mail;
+            if (biographyElement) biographyElement.textContent = data.biography;
             
-            if (data.profilePhoto) {
-                document.getElementById('userProfilePhoto').src = data.profilePhoto;
+            if (profilePhotoElement && data.profilePhoto) {
+                profilePhotoElement.src = data.profilePhoto;
             }
 
             document.getElementById('editProfileForm').classList.add('hidden');
@@ -236,6 +243,11 @@ async function guardarCambios() {
         alert("Hubo un error. Intenta nuevamente.");
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    guardarCambios();
+});
+
 
 function cancelarEdicion() {
     const editProfileForm = document.getElementById('editProfileForm');
