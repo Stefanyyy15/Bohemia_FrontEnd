@@ -313,9 +313,12 @@
     cursor: pointer;
 }
 #editProfileForm{
-    display: block;
+    display: none;
     flex-direction: column;
     align-items: center;
+}
+.block{
+    display: block;
 }
 #editProfileForm button:hover {
     background-color: #6f523b;
@@ -417,7 +420,7 @@
     max-height: 30vh;
     max-width: 80vw;
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); 
-  border-radius: 12px; 
+    border-radius: 12px; 
 }
 
 /* SESION DE BUSQUEDA */

@@ -110,6 +110,12 @@ const showUserProfile = () => {
             }
         });
 }
+
+const  button = document.getElementById("btn-edit");
+button.addEventListener("click", function(){
+    document.getElementById('editProfileForm').style.display = 'none';
+}) 
+
 // CERRAR SESION :P
 function cerrarSesion() {
     localStorage.removeItem("user");
