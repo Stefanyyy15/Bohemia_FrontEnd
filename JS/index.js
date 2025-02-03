@@ -15,7 +15,7 @@ function verificarSesion() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   if (!user || !user.token) {
-      window.location.href = "./Pages/login.html";
+      window.location.href = "../Pages/login.html";
   } else {
       document.getElementById("contenido").classList.remove("hidden");
       document.querySelectorAll(".iconos a").forEach((btn) => {
@@ -24,15 +24,14 @@ function verificarSesion() {
   }
 }
 
-const urlPosts = "http://localhost:8080/api/post";  // Endpoint de posts
+const urlPosts = "http://localhost:8080/api/post";  
 
-// Función para obtener los posts
 async function obtenerPosts(url) {
     try {
         const respuesta = await fetch(url, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token') // Obtener el token desde localStorage
+                'Authorization': 'Bearer ' + localStorage.getItem('token') 
             }
         });
 
@@ -48,11 +47,15 @@ async function obtenerPosts(url) {
 }
 
 function mostrarPosts(posts) {
+    posts.sort((a, b) => new Date(b.publicationDate) - new Date(a.publicationDate));
+
     const contenedorPost = document.querySelector(".ContenedorPost");
     contenedorPost.innerHTML = ''; 
+    
     posts.forEach(post => {
         const postDiv = document.createElement("div");
         postDiv.classList.add("post");
+        
         let imageHTML = '';
         if (post.image) {
             imageHTML = `<div class="post-image-container">
@@ -60,23 +63,34 @@ function mostrarPosts(posts) {
                           </div>`;
         }
 
+        let userImage = post.user.profilePicture 
+            ? `<img src="${post.user.profilePicture}" alt="Foto de perfil" class="post-user-image"/>`
+            : `<img src="/background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="post-user-image"/>`;
+        const fechaLocal = new Date(post.publicationDate).toLocaleString("es-ES", {
+            hour12: true
+        });
+
         postDiv.innerHTML = `
             <div class="post-header">
-                <span class="post-user">${post.user.username}</span>
-                <span class="post-date">${new Date(post.publicationDate).toLocaleString()}</span>
+                <div class="post-user-info">
+                    ${userImage}
+                    <span class="post-user">${post.user.username}</span>
+                </div>
+                <span class="post-date">${fechaLocal}</span>
             </div>
             <div class="post-content">
                 <p>${post.content}</p>
             </div>
-            ${imageHTML}  <!-- Aquí se incluye la imagen si existe -->
+            ${imageHTML}
             <div class="post-footer">
                 <button class="btn-like"><i class="fa fa-heart"></i> Like</button>
                 <button class="btn-comment"><i class="fa fa-comment"></i> Comment</button>
             </div>
         `;
-        
+
         contenedorPost.appendChild(postDiv);
     });
 }
 
 obtenerPosts(urlPosts);
+

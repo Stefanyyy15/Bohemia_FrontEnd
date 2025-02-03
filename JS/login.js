@@ -82,7 +82,7 @@ const loginUsuario = async (email, password) => {
         localStorage.setItem("user", JSON.stringify(data.user));
 
         alert("Inicio de sesión exitoso.");
-        window.location.href = "../Index.html"; // Redirige a la página principal
+        window.location.href = "/Pages/Index.html";
 
         return true;
     } catch (error) {

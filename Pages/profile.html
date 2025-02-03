@@ -45,7 +45,6 @@
                     <div class="follows">
                         <h3 id="followers">985 Followers</h3>
                         <h3 id="following">56 Following</h3>
-
                     </div>
 
                     <p id="userBiography">Biography, No se que hacer conmigo la verdad</p>
@@ -55,16 +54,40 @@
                         <img id="userProfilePhoto" class="img" src="/background/fotoPerfilPredeterminada.png" alt="">
                     </div>
                     <button id="btn-edit">Edit Profile <i class="fa-solid fa-pen-to-square"></i></button>
+                    <div id="editProfileForm" class="hidden">
+                        <label for="editFullname">Fullname:</label>
+                        <input type="text" id="editFullname" name="fullname">
+
+                        <label for="editUsername">Username:</label>
+                        <input type="text" id="editUsername" name="username">
+
+                        <label for="editEmail">Mail:</label>
+                        <input type="email" id="editEmail" name="mail">
+
+                        <label for="editPassword">Password:</label>
+                        <input type="password" id="editPassword" name="password">
+
+                        <label for="editProfilePhoto">Profile Photo:</label>
+                        <input type="text" id="editProfilePhoto" placeholder="URL">
+
+                        <label for="editBiography">Biography:</label>
+                        <textarea id="editBiography" name="biography"></textarea>
+
+                        <button id="saveChanges">Save changes</button>  
+                        <button id="cancelEdit" class="btn-cancel">Cancel</button>
+
+                    </div>
                 </div>
             </div>
+            <div class="contenedorMisPosts"></div>
             <div class="cerrarSesion">
-                <button id="btn-close" onclick="cerrarSesion()">Close Sesión</button>
-
+                <button id="btn-close" onclick="cerrarSesion()">Log out  <i class="fa-solid fa-right-from-bracket"></i></button>
+                <button id="btn-eliminar" onclick="eliminarPerfil()">Delete profile <i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
 
         <div class="iconos">
-            <a href="../Index.html"><i class="fa-solid fa-house fa-2x"></i></a>
+            <a href="/Pages/Index.html"><i class="fa-solid fa-house fa-2x"></i></a>
             <a href="/Pages/search.html"><i class="fa-solid fa-magnifying-glass fa-2x"></i></a>
             <a href="/Pages/post.html"><i class="fa-solid fa-paintbrush fa-2x"></i></a>
             <a href="/Pages/activity.html"><i class="fa-solid fa-bell fa-2x"></i></a>

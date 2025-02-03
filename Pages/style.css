@@ -235,7 +235,7 @@
 }
 /* CSS PARA LA PAGINA DE PERFIL Y DE ACTIVIDADES */
 #BodyProfileAct{
-    background: url("../background/fondoProfileAct.png");
+    background: url("../background/fondoPrincipal.png");
     background-size: cover;
     color: #6f523b;
 }
@@ -290,7 +290,57 @@
     cursor: pointer;
     color: white;
 }
+.edit-profile-form {
+    display: block;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+#editProfileForm input, #editProfileForm textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    font-family: 'Glass Antiqua';
+    color: #6f523b;
+}
+
+#editProfileForm button {
+    margin-top: 10px;
+    height: 5vh;
+    width: 7vw;
+    background-color: #6f523b;
+    font-family: 'Glass Antiqua';
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#editProfileForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#editProfileForm button:hover {
+    background-color: #6f523b;
+}
+
 #btn-close{
+    background-color: #6f523b;
+    font-family: 'Glass Antiqua';
+    font-size: 15px;
+    height: 5vh;
+    width: 8vw;
+    border: 1px solid #6f523b;
+    border-radius: 20px;
+    cursor: pointer;
+    color: white;
+    margin-top: 10%;
+}
+#btn-eliminar{
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
     font-size: 15px;
@@ -305,6 +355,7 @@
 .cerrarSesion{
     display: flex;
     justify-content: center;
+    gap: 20px;
 }
 .follows{
     display: flex;
@@ -376,7 +427,7 @@
   border-radius: 12px; 
 }
 
-/* Estilo para la barra de búsqueda */
+/* SESION DE BUSQUEDA */
 .search-container {
     display: flex;
     justify-content: center;
@@ -384,7 +435,6 @@
     gap: 10px;
     margin-top: 20px;
 }
-
 #searchInput {
     font-family: 'Glass Antiqua';
     font-size: 20px;
@@ -447,8 +497,31 @@
     color: white;
     display: none; 
 }
-
-
 .follow-buttons button:hover {
     background-color: #342518;
 }
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.post-user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.post-user-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.post-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
