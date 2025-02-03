@@ -209,41 +209,53 @@ async function guardarCambios() {
             body: JSON.stringify(updatedProfileData)
         });
 
+        if (!response.ok) {
+            alert("Hubo un error al guardar los cambios.");
+            return;
+        }
+
         const data = await response.json();
 
         if (data) {
-            setTimeout(() => {
-                const fullnameElement = document.getElementById('userFullname');
-                const usernameElement = document.getElementById('userUsername');
-                const emailElement = document.getElementById('userEmail');
-                const biographyElement = document.getElementById('userBiography');
-                const profilePhotoElement = document.getElementById('userProfilePhoto');
+            localStorage.setItem("user", JSON.stringify(data));
+            document.getElementById('userFullname').textContent = data.fullname;
+            document.getElementById('userUsername').textContent = data.username;
+            document.getElementById('userEmail').textContent = data.mail;
+            document.getElementById('userBiography').textContent = data.biography;
+            
+            if (data.profilePhoto) {
+                document.getElementById('userProfilePhoto').src = data.profilePhoto;
+            }
 
-                if (fullnameElement) fullnameElement.textContent = data.fullname;
-                if (usernameElement) usernameElement.textContent = data.username;
-                if (emailElement) emailElement.textContent = data.mail;
-                if (biographyElement) biographyElement.textContent = data.biography;
+            document.getElementById('editProfileForm').classList.add('hidden');
 
-                if (profilePhotoElement && data.profilePhoto) {
-                    profilePhotoElement.src = data.profilePhoto;
-                }
-                document.getElementById('editProfileForm').classList.add('hidden');
-            }, 100);
-        } else {
-            alert("Hubo un error al guardar los cambios.");
+            alert("Perfil actualizado correctamente.");
         }
     } catch (error) {
         console.error("Error al guardar los cambios:", error);
         alert("Hubo un error. Intenta nuevamente.");
     }
 }
+
+function cancelarEdicion() {
+    const editProfileForm = document.getElementById('editProfileForm');
+    if (editProfileForm) {
+        editProfileForm.classList.add('hidden');
+    } else {
+        console.error('No se encontró el formulario de edición');
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const btnEdit = document.getElementById('btn-edit');
     const btnSaveChanges = document.getElementById('saveChanges');
     const btnCancelEdit = document.getElementById('cancelEdit');
-    const editProfileForm = document.getElementById('editProfileForm');
+
     if (btnEdit) {
-        btnEdit.addEventListener('click', editarPerfil);
+        btnEdit.addEventListener('click', () => {
+            document.getElementById('editProfileForm').classList.remove('hidden');
+        });
     }
 
     if (btnSaveChanges) {
@@ -253,24 +265,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnCancelEdit) {
         btnCancelEdit.addEventListener('click', cancelarEdicion);
     }
-    function editarPerfil() {
-        if (editProfileForm) {
-            editProfileForm.classList.remove('hidden'); 
-        } else {
-            console.error('No se encontró el formulario de edición');
-        }
-    }
-    function cancelarEdicion() {
-        if (editProfileForm) {
-            editProfileForm.classList.add('hidden');
-        } else {
-            console.error('No se encontró el formulario de edición');
-        }
-    }
-    async function guardarCambios() {
-        alert('Cambios guardados');
-    }
 });
+
 
 function mostrarMisPosts(posts) {
     const contenedorPost = document.querySelector(".contenedorMisPosts");

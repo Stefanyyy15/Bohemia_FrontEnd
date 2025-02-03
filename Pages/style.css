@@ -290,13 +290,6 @@
     cursor: pointer;
     color: white;
 }
-.edit-profile-form {
-    display: block;
-    padding: 20px;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    margin-top: 20px;
-}
 #editProfileForm input, #editProfileForm textarea {
     width: 100%;
     margin-bottom: 10px;
@@ -320,7 +313,7 @@
     cursor: pointer;
 }
 #editProfileForm{
-    display: flex;
+    display: block;
     flex-direction: column;
     align-items: center;
 }
