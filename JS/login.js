@@ -96,11 +96,7 @@ const loginUsuario = async (email, password) => {
             return false;
         }
 
-        // Verifica la respuesta antes de hacer JSON.parse
-        const textResponse = await respuesta.text();
-        console.log("Respuesta de la API: ", textResponse);  // Imprime el texto para verificar el formato
-        const data = JSON.parse(textResponse);  // Intenta parsear manualmente
-
+        const data = await respuesta.json();
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -114,7 +110,6 @@ const loginUsuario = async (email, password) => {
         return false;
     }
 };
-
 
 // Manejo del botón de login
 document.getElementById("btn-login").addEventListener("click", () => {

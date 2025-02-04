@@ -616,8 +616,6 @@ function obtenerIdUsuarioDesdeToken(token) {
 }
 
 
-// profile.js
-
 document.addEventListener("DOMContentLoaded", () => {
     actualizarContadoresSeguidores();
 });
@@ -637,9 +635,8 @@ async function actualizarContadoresSeguidores() {
         if (!response.ok) throw new Error("Error al actualizar contadores");
 
         const userData = await response.json();
-        console.log("Datos recibidos:", userData); // Para depuración
+        console.log("Datos recibidos:", userData); 
 
-        // Validar si existen followers y following
         const followersCount = Array.isArray(userData.followers) ? userData.followers.length : 0;
         const followingCount = Array.isArray(userData.following) ? userData.following.length : 0;
 
@@ -651,7 +648,6 @@ async function actualizarContadoresSeguidores() {
     }
 }
 
-// Asegurar que el perfil se carga correctamente
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("userFullname")) {
         console.log("Mostrando perfil de usuario...");
