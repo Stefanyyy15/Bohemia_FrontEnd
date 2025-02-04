@@ -1,4 +1,3 @@
-// search.js
 const obtenerToken = () => localStorage.getItem("token");
 
 const searchUsers = async (event) => {
@@ -10,7 +9,7 @@ const searchUsers = async (event) => {
     if (!token) {
         alert("No estás autenticado. Inicia sesión.");
         window.location.href = "../login.html";
-        return;
+        returnl;
     }
 
     try {
@@ -34,22 +33,22 @@ const searchUsers = async (event) => {
     }
 };
 
-    const displaySearchResults = (user) => {
-        const resultsContainer = document.getElementById("searchResults");
-        resultsContainer.innerHTML = "";
+const displaySearchResults = (user) => {
+    const resultsContainer = document.getElementById("searchResults");
+    resultsContainer.innerHTML = "";
 
-        if (!user) {
-            resultsContainer.innerHTML = "<p>No se encontró ningún usuario.</p>";
-            return;
-        }
+    if (!user) {
+        resultsContainer.innerHTML = "<p>No se encontró ningún usuario.</p>";
+        return;
+    }
 
-        const currentUserId = obtenerIdUsuarioDesdeToken(obtenerToken());
-        const showFollowButtons = currentUserId !== user.id_user;
+    const currentUserId = obtenerIdUsuarioDesdeToken(obtenerToken());
+    const showFollowButtons = currentUserId !== user.id_user;
 
-        const userElement = document.createElement("div");
-        userElement.classList.add("user-result");
+    const userElement = document.createElement("div");
+    userElement.classList.add("user-result");
 
-        userElement.innerHTML = `
+    userElement.innerHTML = `
         <div class="user-profile-container">
             <div class="user-info-wrapper">
                 <div class="profile-image">
@@ -74,28 +73,18 @@ const searchUsers = async (event) => {
             </div>
             <hr>
         </div>
-    `;  
+    `;
 
-        resultsContainer.appendChild(userElement);
+    resultsContainer.appendChild(userElement);
 
-        if (showFollowButtons) {
-            verificarEstadoSeguimiento(user.id_user);
-        }
-    };
+    if (showFollowButtons) {
+        verificarEstadoSeguimiento(user.id_user);
+    }
+};
 
 function obtenerIdUsuarioDesdeToken(token) {
-    if (!token) return null;
-
-    try {
-        const partes = token.split('.');
-        if (partes.length !== 3) return null;
-
-        const payload = JSON.parse(atob(partes[1]));
-        return payload.id;
-    } catch (error) {
-        console.error('Error al decodificar el token:', error);
-        return null;
-    }
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user ? user.id_user : null;
 }
 
 async function verificarEstadoSeguimiento(targetUserId) {
@@ -135,10 +124,11 @@ function actualizarBotonesSeguimiento(targetUserId, isFollowing) {
 async function seguirUsuario(targetUserId) {
     const token = obtenerToken();
     const currentUserId = obtenerIdUsuarioDesdeToken(token);
+    console.log("Current User ID:", currentUserId);
+    console.log("Target User ID:", targetUserId);
 
     if (!token || !currentUserId) {
         alert("No estás autenticado.");
-        window.location.href = "../login.html";
         return;
     }
 
@@ -151,12 +141,16 @@ async function seguirUsuario(targetUserId) {
             }
         });
 
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const responseText = await response.text();
+        console.log("Response:", responseText);
 
-        const result = await response.text();
-        console.log(result);
-        verificarEstadoSeguimiento(targetUserId);
-        actualizarContadoresSeguidores();
+        if (!response.ok) {
+            console.error("Server error:", responseText);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        await verificarEstadoSeguimiento(targetUserId);
+        await actualizarContadoresSeguidores();
     } catch (error) {
         console.error("Error al seguir usuario:", error);
         alert("Error al intentar seguir al usuario");
@@ -194,40 +188,8 @@ async function dejarDeSeguirUsuario(targetUserId) {
     }
 }
 
-// profile.js additions
-async function actualizarContadoresSeguidores() {
-    const token = obtenerToken();
-    const currentUserId = obtenerIdUsuarioDesdeToken(token);
-
-    if (!currentUserId) return;
-
-    try {
-        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}`, {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-        const userData = await response.json();
-        const followersCount = document.getElementById('followersCount');
-        const followingCount = document.getElementById('followingCount');
-
-        if (followersCount) {
-            followersCount.textContent = userData.followers.length;
-        }
-        if (followingCount) {
-            followingCount.textContent = userData.following.length;
-        }
-    } catch (error) {
-        console.error("Error al actualizar contadores:", error);
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('userFullname')) {
         showUserProfile();
-        actualizarContadoresSeguidores();
     }
 });

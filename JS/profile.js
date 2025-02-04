@@ -552,3 +552,111 @@ async function eliminarPost(postId) {
         alert('No se pudo eliminar el post');
     }
 }
+
+
+function createEditPostModal() {
+    const modal = document.createElement('div');
+    modal.id = 'editPostModal';
+    modal.className = 'modal';
+    modal.style.display = 'none';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h2>Edit Post</h2>
+            <textarea id="editPostContent" rows="4" cols="50"></textarea>
+            <input type="text" id="editPostImage" placeholder="Image URL (optional)">
+            <div class="modal-buttons">
+                <button id="saveEditPost">Save Changes</button>
+                <button id="cancelEditPost">Cancel</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById('saveEditPost').addEventListener('click', async () => {
+        const postId = modal.dataset.postId;
+        const nuevoContenido = document.getElementById('editPostContent').value;
+        const nuevaImagen = document.getElementById('editPostImage').value;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    content: nuevoContenido,
+                    image: nuevaImagen
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('No se pudo actualizar el post ${response.status}');
+            }
+            modal.style.display = 'none';
+            obtenerMisPosts();
+
+            alert('Post updated successfully');
+
+        } catch (error) {
+            console.error('Error al actualizar el post:', error);
+            alert('Could not update the post');
+        }
+    });
+
+    document.getElementById('cancelEditPost').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+}
+
+
+function obtenerIdUsuarioDesdeToken(token) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user ? user.id_user : null;
+}
+
+
+// profile.js
+
+document.addEventListener("DOMContentLoaded", () => {
+    actualizarContadoresSeguidores();
+});
+
+async function actualizarContadoresSeguidores() {
+    const token = obtenerToken();
+    const currentUserId = obtenerIdUsuarioDesdeToken(token);
+    if (!currentUserId) return;
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) throw new Error("Error al actualizar contadores");
+
+        const userData = await response.json();
+        console.log("Datos recibidos:", userData); // Para depuración
+
+        // Validar si existen followers y following
+        const followersCount = Array.isArray(userData.followers) ? userData.followers.length : 0;
+        const followingCount = Array.isArray(userData.following) ? userData.following.length : 0;
+
+        document.getElementById("followers").textContent = `${followersCount} Followers`;
+        document.getElementById("following").textContent = `${followingCount} Following`;
+
+    } catch (error) {
+        console.error("Error al actualizar contadores:", error);
+    }
+}
+
+// Asegurar que el perfil se carga correctamente
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("userFullname")) {
+        console.log("Mostrando perfil de usuario...");
+        showUserProfile();
+    }
+});
+
+document.addEventListener("DOMContentLoaded", createEditPostModal);
