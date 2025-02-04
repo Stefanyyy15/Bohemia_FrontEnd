@@ -4,7 +4,24 @@
     padding: 0;
     box-sizing: border-box;
 }
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: white;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #6f523b;
+  border-radius: 50px;
+}
 .RegisterBody {
     background: url("../background/fondoRegister.png");
     background-size: cover;
@@ -172,6 +189,7 @@
     position: fixed;
     width: 100%;
     background-color: #eeece2;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.041);
 }
 
 .imagenLogo {
@@ -200,7 +218,9 @@
     font-family: 'Glass Antiqua';
     flex-direction: column;
 }
-
+#indexContent{
+    margin-top: 8%;
+}
 #btn-login {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
@@ -223,9 +243,8 @@
     background-color: white;
     border-radius: 20px;
     width: 50vw;
-    margin-left: 26%;
-    margin-top: 3%;
-    padding: 40px;
+    margin-left: 24%;
+    padding: 30px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -345,7 +364,6 @@
     border-radius: 15px;
     font-family: 'Glass Antiqua';
 }
-
 
 /* CSS PARA LA PAGINA DE PERFIL Y DE ACTIVIDADES */
 #BodyProfileAct {
@@ -544,7 +562,10 @@
     width: 80%;
     align-items: center;
 }
-
+#postt{
+    margin-top: 8%;
+    height: 50vh;
+}
 #content {
     font-family: 'Glass Antiqua';
     font-size: 20px;
@@ -583,6 +604,8 @@
 }
 
 /* SESION DE BUSQUEDA */
+
+
 .search-container {
     display: flex;
     justify-content: center;
@@ -590,7 +613,9 @@
     gap: 10px;
     margin-top: 20px;
 }
-
+#contentSearch{
+    margin-top: 5%;
+}
 #searchInput {
     font-family: 'Glass Antiqua';
     font-size: 20px;
@@ -683,6 +708,7 @@
     cursor: pointer;
     font-family: 'Glass Antiqua';
 }
+
 .modal {
     display: none;
     position: fixed;
@@ -722,21 +748,14 @@
     margin: 0 10px;
 }
 
-@media (max-width: 1700px) {
-    .ContenedorPost {
-        width: 50vw;
-        margin-left: 25%;
-        margin-top: 3%;
-    }
-}
-
 @media (max-width: 750px) {
-    #BodyInicio{
+    #BodyInicio {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        
+
     }
+
     .ContenedorPost {
         width: 150vw;
         margin-left: -3%;
@@ -745,18 +764,21 @@
         flex-direction: column;
         align-items: center;
     }
-    .post{
+
+    .post {
         width: 100%;
+    }
+
+    .imagenLogo {
+        display: none;
     }
     .iconos{
         display: none;
     }
-    .imagenLogo{
+    .Login {
         display: none;
     }
-    .Login{
-        display: none;
-    }
+
     .post-user-image {
         width: 8vw;
         height: 7vh;
