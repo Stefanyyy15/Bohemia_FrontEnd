@@ -1,14 +1,16 @@
 /* CSS PARA LA PAGINA DE REGISTRO */
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-.RegisterBody{
+
+.RegisterBody {
     background: url("../background/fondoRegister.png");
     background-size: cover;
     color: #6f523b;
 }
+
 #preloader {
     position: fixed;
     top: 0;
@@ -22,18 +24,22 @@
     z-index: 9999;
     transition: opacity 2s ease-out;
 }
+
 .fade-out {
     opacity: 0;
     pointer-events: none;
 }
+
 .hidden {
     display: none;
 }
+
 .imagenLogo {
     display: flex;
     justify-content: center;
     width: 10%;
 }
+
 .contenedorRegistro {
     display: flex;
     text-align: center;
@@ -44,6 +50,7 @@
     margin: auto;
     margin-top: 12%;
 }
+
 .contenedorLogin {
     display: flex;
     text-align: center;
@@ -54,18 +61,21 @@
     margin: auto;
     margin-top: 15%;
 }
-#userForm{
+
+#userForm {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
 }
+
 .contenedorRegistro h3 {
     font-family: 'Glass Antiqua';
     margin-bottom: 20px;
     letter-spacing: 1px;
 }
-.contenedorRegistro input{
+
+.contenedorRegistro input {
     font-family: 'Glass Antiqua';
     font-size: 30px;
     text-align: center;
@@ -76,12 +86,14 @@
     height: 5vh;
     letter-spacing: 1px;
 }
+
 .contenedorLogin h3 {
     font-family: 'Glass Antiqua';
     margin-bottom: 20px;
     letter-spacing: 1px;
 }
-.contenedorLogin input{
+
+.contenedorLogin input {
     font-family: 'Glass Antiqua';
     font-size: 30px;
     text-align: center;
@@ -92,6 +104,7 @@
     height: 5vh;
     letter-spacing: 1px;
 }
+
 #btn-register {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
@@ -104,13 +117,15 @@
     color: white;
     letter-spacing: 1px;
 }
-#Login{
+
+#Login {
     text-decoration: none;
     font-family: 'Glass Antiqua';
     color: #6f523b;
     margin-top: 15px;
     letter-spacing: 1px;
 }
+
 .password-wrapper {
     position: relative;
     display: flex;
@@ -132,37 +147,24 @@
 }
 
 #togglePassword i {
-    font-size: 18px; 
+    font-size: 18px;
     color: #6f523b;
 }
-.linkLogin{
+
+.linkLogin {
     text-decoration: none;
     color: #6f523b;
     font-family: 'Glass Antiqua';
 }
-/* Ocultar formularios inicialmente */
-#forgotPasswordForm {
-    display: none;
-    margin-top: 20px;
-}
-
-#newPasswordForm {
-    display: none;
-    margin-top: 20px;
-}
-
-.hidden {
-    display: none;
-}
-
 
 /* CSS PARA LA PAGINA DE INICIO */
-#BodyInicio{
+#BodyInicio {
     background: url("/background/fondoPrincipal.png");
     background-size: cover;
     color: #6f523b;
 }
-.nav-bar{
+
+.nav-bar {
     height: 10vh;
     overflow: hidden;
     display: flex;
@@ -171,10 +173,12 @@
     width: 100%;
     background-color: #eeece2;
 }
-.imagenLogo{
+
+.imagenLogo {
     width: 15%;
 }
-.title{
+
+.title {
     width: 70%;
     display: flex;
     justify-content: center;
@@ -183,18 +187,21 @@
     font-family: 'Abril Fatface';
     letter-spacing: 1px;
 }
-.Login{
+
+.Login {
     width: 15%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-#slogan{
+
+#slogan {
     text-align: center;
     font-family: 'Glass Antiqua';
     flex-direction: column;
 }
-#btn-login{
+
+#btn-login {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
     font-size: 25px;
@@ -206,10 +213,12 @@
     color: white;
     letter-spacing: 1px;
 }
-#contenido{
+
+#contenido {
     display: flex;
 }
-.ContenedorPost{
+
+.ContenedorPost {
     border: 2px solid white;
     background-color: white;
     border-radius: 20px;
@@ -219,6 +228,7 @@
     padding: 40px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+
 .post {
     background: #fff;
     padding: 30px;
@@ -259,7 +269,8 @@
 .post-footer button:hover {
     background: #342518;
 }
-.iconos{
+
+.iconos {
     width: 5vw;
     display: flex;
     margin-top: 7%;
@@ -270,40 +281,108 @@
     align-items: center;
     position: fixed;
 }
-.iconos a{
+
+.iconos a {
     text-decoration: none;
     color: #6f523b;
 }
-.iconos a :hover{
+
+.iconos a :hover {
     color: #523620;
 }
+
+.comentarios {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    display: none;
+}
+
+.comentario {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-user-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comentario-usuario {
+    font-weight: bold;
+    margin-right: 10px;
+    font-family: 'Glass Antiqua';
+}
+
+.comentario-texto {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    font-family: 'Glass Antiqua';
+    width: 35vw;
+}
+
+.comentario-input {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    font-family: 'Glass Antiqua';
+    display: none;
+}
+
+.btn-enviar-comentario {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #6f523b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+    font-family: 'Glass Antiqua';
+}
+
+
 /* CSS PARA LA PAGINA DE PERFIL Y DE ACTIVIDADES */
-#BodyProfileAct{
+#BodyProfileAct {
     background: url("../background/fondoPrincipal.png");
     background-size: cover;
     color: #6f523b;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
 }
-#contentProfile{
+
+#contentProfile {
     margin-top: 10%;
 }
-.fila{
+
+.fila {
     display: flex;
     justify-content: space-between;
     border-bottom: 2px solid #523620;
     border-bottom-style: dotted;
 }
-.photoPerfil{
+
+.photoPerfil {
     border: 2px solid #523620;
     height: 16vh;
     width: 8vw;
     overflow: hidden;
     border-radius: 50%;
 }
-.img{
+
+.img {
     width: 8vw;
     height: 16vh;
 }
-.col1{
+
+.col1 {
     font-family: 'Glass Antiqua';
     width: 40%;
     display: flex;
@@ -312,7 +391,8 @@
     gap: 20px;
     margin-bottom: 5%;
 }
-.col2{
+
+.col2 {
     font-family: 'Glass Antiqua';
     width: 30%;
     display: flex;
@@ -323,7 +403,8 @@
     text-align: center;
     margin-bottom: 5%;
 }
-#btn-edit{
+
+#btn-edit {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
     font-size: 15px;
@@ -334,7 +415,9 @@
     cursor: pointer;
     color: white;
 }
-#editProfileForm input, #editProfileForm textarea {
+
+#editProfileForm input,
+#editProfileForm textarea {
     width: 100%;
     margin-bottom: 10px;
     padding: 8px;
@@ -356,7 +439,8 @@
     border-radius: 4px;
     cursor: pointer;
 }
-#editProfileForm{
+
+#editProfileForm {
     display: none;
     flex-direction: column;
     align-items: center;
@@ -370,14 +454,16 @@
     border-radius: 15px;
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
 }
-.block{
+
+.block {
     display: block;
 }
+
 #editProfileForm button:hover {
     background-color: #6f523b;
 }
 
-#btn-close{
+#btn-close {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
     font-size: 15px;
@@ -389,7 +475,8 @@
     color: white;
     margin-top: 10%;
 }
-#btn-eliminar{
+
+#btn-eliminar {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
     font-size: 15px;
@@ -401,27 +488,32 @@
     color: white;
     margin-top: 10%;
 }
-.cerrarSesion{
+
+.cerrarSesion {
     display: flex;
     justify-content: center;
     gap: 20px;
 }
-.follows{
+
+.follows {
     display: flex;
     justify-content: space-between;
 }
+
 .disabled {
-    pointer-events: none; 
-    opacity: 0.5; 
+    pointer-events: none;
+    opacity: 0.5;
     cursor: not-allowed;
 }
+
 /* CSS PARA LA PAGINA DE POSTS */
-#BodyPost{
+#BodyPost {
     background: url("/background/fondoPrincipal.png");
     background-size: cover;
     color: #6f523b;
 }
-.postCont{
+
+.postCont {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -430,7 +522,8 @@
     gap: 20px;
 
 }
-#btn-create-post{
+
+#btn-create-post {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
     font-size: 15px;
@@ -442,7 +535,8 @@
     color: white;
     letter-spacing: 1px;
 }
-#postForm{
+
+#postForm {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -450,37 +544,44 @@
     width: 80%;
     align-items: center;
 }
-#content{
+
+#content {
     font-family: 'Glass Antiqua';
     font-size: 20px;
     border: 1px solid #6f523b;
 }
-#image{
+
+#image {
     font-family: 'Glass Antiqua';
     font-size: 20px;
     border: 1px solid #6f523b;
     text-align: center;
 }
-.post-image-container{
+
+.post-image-container {
     padding: 3%;
     text-align: center;
 }
-.post-image{
+
+.post-image {
     max-height: 30vh;
     max-width: 80vw;
-    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); 
-    border-radius: 12px; 
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
 }
+
 .post-user-image {
     width: 2vw;
-    height: 4vh; 
+    height: 4vh;
     border-radius: 50%;
     margin-right: 10px;
 }
-.post-user-info{
+
+.post-user-info {
     display: flex;
     align-items: center;
 }
+
 /* SESION DE BUSQUEDA */
 .search-container {
     display: flex;
@@ -489,6 +590,7 @@
     gap: 10px;
     margin-top: 20px;
 }
+
 #searchInput {
     font-family: 'Glass Antiqua';
     font-size: 20px;
@@ -500,11 +602,13 @@
     color: #6f523b;
     transition: border-color 0.3s ease;
 }
-.search-results-container{
+
+.search-results-container {
     margin-top: 5%;
     font-family: 'Glass Antiqua';
     font-size: 20px;
 }
+
 #searchInput:focus {
     outline: none;
     border-color: #342518;
@@ -561,13 +665,16 @@
     color: #666;
     font-size: 0.9em;
 }
+
 .follow-section {
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
 }
-.follow-btn, .unfollow-btn {
+
+.follow-btn,
+.unfollow-btn {
     padding: 5px 10px;
     border-radius: 20px;
     border: none;
@@ -575,8 +682,7 @@
     color: white;
     cursor: pointer;
     font-family: 'Glass Antiqua';
-}   
-
+}
 .modal {
     display: none;
     position: fixed;
@@ -586,7 +692,7 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
@@ -614,4 +720,45 @@
 .modal-buttons button {
     padding: 10px 20px;
     margin: 0 10px;
+}
+
+@media (max-width: 1700px) {
+    .ContenedorPost {
+        width: 50vw;
+        margin-left: 25%;
+        margin-top: 3%;
+    }
+}
+
+@media (max-width: 750px) {
+    #BodyInicio{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        
+    }
+    .ContenedorPost {
+        width: 150vw;
+        margin-left: -3%;
+        margin-top: 5%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .post{
+        width: 100%;
+    }
+    .iconos{
+        display: none;
+    }
+    .imagenLogo{
+        display: none;
+    }
+    .Login{
+        display: none;
+    }
+    .post-user-image {
+        width: 8vw;
+        height: 7vh;
+    }
 }

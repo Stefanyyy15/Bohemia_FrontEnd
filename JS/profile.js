@@ -207,13 +207,13 @@ function mostrarMisPosts(posts) {
 
         const btnEdit = postDiv.querySelector('.btn-edit');
         btnEdit.addEventListener('click', (e) => {
-            const postId = e.target.closest('button').dataset.postId; // Obtener el postId del botón
-            console.log("Post ID:", postId);  // Verifica que el postId esté presente
+            const postId = e.target.closest('button').dataset.postId;
+            console.log("Post ID:", postId);
             if (!postId) {
                 console.error("No se encontró el postId.");
                 return;
             }
-            editarPost(postId); // Llamar a la función de edición con el postId
+            editarPost(postId);
         });
 
 
@@ -221,8 +221,8 @@ function mostrarMisPosts(posts) {
         // Añadimos el evento de eliminación para cada botón
         const btnDelete = postDiv.querySelector('.btn-delete');
         btnDelete.addEventListener('click', (e) => {
-            const postId = e.target.closest('button').dataset.postId; // Obtener el postId del botón
-            eliminarPost(postId); // Llamar a la función de eliminación con el postId
+            const postId = e.target.closest('button').dataset.postId;
+            eliminarPost(postId);
         });
     });
 }
@@ -407,10 +407,8 @@ function cancelarEdicion() {
 
 // POSSSSSSSTTTT
 
-// Función para editar un post
 async function editarPost(postId) {
     try {
-        // Obtener los detalles del post
         const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
             method: 'GET',
             headers: {
@@ -424,22 +422,15 @@ async function editarPost(postId) {
         }
 
         const post = await response.json();
-
-        // Crear un modal o formulario de edición
         const editModal = document.getElementById('editPostModal');
         if (!editModal) {
             console.error('No se encontró el modal de edición');
             return;
         }
 
-        // Llenar el formulario de edición con los datos actuales del post
         document.getElementById('editPostContent').value = post.content;
         document.getElementById('editPostImage').value = post.image || '';
-
-        // Guardar el ID del post para usar en la actualización
         editModal.dataset.postId = postId;
-
-        // Mostrar el modal de edición
         editModal.style.display = 'block';
 
     } catch (error) {
@@ -448,7 +439,6 @@ async function editarPost(postId) {
     }
 }
 
-// Función para eliminar un post
 async function eliminarPost(postId) {
     const confirmacion = confirm('¿Estás seguro de que quieres eliminar este post?');
 
@@ -468,8 +458,6 @@ async function eliminarPost(postId) {
         if (!response.ok) {
             throw new Error('No se pudo eliminar el post');
         }
-
-        // Recargar los posts
         obtenerMisPosts();
 
         alert('Post eliminado correctamente');
@@ -480,7 +468,6 @@ async function eliminarPost(postId) {
     }
 }
 
-// Modal para edición de post
 function createEditPostModal() {
     const modal = document.createElement('div');
     modal.id = 'editPostModal';
@@ -499,7 +486,6 @@ function createEditPostModal() {
     `;
     document.body.appendChild(modal);
 
-    // Evento para guardar cambios
     document.getElementById('saveEditPost').addEventListener('click', async () => {
         const postId = modal.dataset.postId;
         const nuevoContenido = document.getElementById('editPostContent').value;
@@ -521,11 +507,7 @@ function createEditPostModal() {
             if (!response.ok) {
                 throw new Error('No se pudo actualizar el post ${response.status}');
             }
-
-            // Cerrar el modal
             modal.style.display = 'none';
-
-            // Recargar los posts
             obtenerMisPosts();
 
             alert('Post updated successfully');
@@ -536,11 +518,9 @@ function createEditPostModal() {
         }
     });
 
-    // Evento para cancelar
     document.getElementById('cancelEditPost').addEventListener('click', () => {
         modal.style.display = 'none';
     });
 }
 
-// Añadir el modal cuando el DOM esté cargado
 document.addEventListener('DOMContentLoaded', createEditPostModal);
