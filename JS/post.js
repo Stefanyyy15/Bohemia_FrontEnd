@@ -47,8 +47,7 @@ async function agregarPost(url) {
         content: document.getElementById("content").value.trim(),
         image: document.getElementById("image").value.trim() || null,
         user: { id_user: JSON.parse(localStorage.getItem('user')).id_user },
-        // Usamos new Date() para obtener la fecha y hora actual en formato ISO 8601
-        publicationDate: new Date().toISOString() // Asegúrate de que esto incluya la hora
+        publicationDate: new Date().toISOString() 
     };
 
     if (!nuevoPost.content) {

@@ -4,24 +4,26 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 *,
 *::after,
 *::before {
-  box-sizing: inherit;
+    box-sizing: inherit;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+    width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: white;
+    background-color: white;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #6f523b;
-  border-radius: 50px;
+    background-color: #6f523b;
+    border-radius: 50px;
 }
+
 .RegisterBody {
     background: url("../background/fondoRegister.png");
     background-size: cover;
@@ -218,9 +220,11 @@
     font-family: 'Glass Antiqua';
     flex-direction: column;
 }
-#indexContent{
+
+#indexContent {
     margin-top: 8%;
 }
+
 #btn-login {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
@@ -562,14 +566,23 @@
     width: 80%;
     align-items: center;
 }
-#postt{
+
+#postt {
     margin-top: 8%;
     height: 50vh;
 }
+
 #content {
     font-family: 'Glass Antiqua';
     font-size: 20px;
     border: 1px solid #6f523b;
+}
+
+.no-posts-message {
+    font-family: 'Glass Antiqua';
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
 }
 
 #image {
@@ -613,9 +626,11 @@
     gap: 10px;
     margin-top: 20px;
 }
-#contentSearch{
+
+#contentSearch {
     margin-top: 5%;
 }
+
 #searchInput {
     font-family: 'Glass Antiqua';
     font-size: 20px;
@@ -772,9 +787,11 @@
     .imagenLogo {
         display: none;
     }
-    .iconos{
+
+    .iconos {
         display: none;
     }
+
     .Login {
         display: none;
     }

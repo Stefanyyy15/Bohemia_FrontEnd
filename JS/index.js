@@ -52,8 +52,7 @@ window.addEventListener("load", function() {
   
           postDiv.innerHTML = `
               <div class="post-header">
-                  <div 
-                 id="${post.postId}" class="post-user-info">
+                  <div id="${post.postId}" class="post-user-info">
                       ${userImage}
                       <span class="post-user">${post.user.username}</span>
                   </div>

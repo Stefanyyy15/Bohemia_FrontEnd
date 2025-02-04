@@ -54,7 +54,7 @@
                         <img id="userProfilePhoto" class="img" src="/background/fotoPerfilPredeterminada.png" alt="">
                     </div>
                     <button id="btn-edit">Edit Profile <i class="fa-solid fa-pen-to-square"></i></button>
-                    <div id="editProfileForm" >
+                    <div id="editProfileForm">
                         <label for="editFullname">Fullname:</label>
                         <input type="text" id="editFullname" name="fullname">
 
@@ -73,7 +73,7 @@
                         <label for="editBiography">Biography:</label>
                         <textarea id="editBiography" name="biography"></textarea>
 
-                        <button id="saveChanges">Save changes</button>  
+                        <button id="saveChanges">Save changes</button>
                         <button id="cancelEdit" class="btn-cancel">Cancel</button>
 
                     </div>
@@ -81,9 +81,26 @@
             </div>
             <div class="contenedorMisPosts"></div>
             <div class="cerrarSesion">
-                <button id="btn-close" onclick="cerrarSesion()">Log out  <i class="fa-solid fa-right-from-bracket"></i></button>
-                <button id="btn-eliminar" onclick="eliminarPerfil()">Delete profile <i class="fa-solid fa-trash"></i></button>
+                <button id="btn-close" onclick="cerrarSesion()">Log out <i
+                        class="fa-solid fa-right-from-bracket"></i></button>
+                <button id="btn-eliminar" onclick="eliminarPerfil()">Delete profile <i
+                        class="fa-solid fa-trash"></i></button>
             </div>
+            <div id="editPostModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>Edit Post</h2>
+                    <textarea id="editPostContent" rows="4" cols="50"></textarea>
+                    <input type="text" id="editPostImage" placeholder="Image URL (optional)">
+                    <label for="editPostDate">Fecha de Publicación:</label>
+                    <span id="editPostDate"></span>
+
+                    <div class="modal-buttons">
+                        <button id="saveEditPost">Save Changes</button>
+                        <button id="cancelEditPost">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="iconos">

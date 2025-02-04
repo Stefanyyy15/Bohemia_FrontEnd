@@ -180,8 +180,8 @@ function mostrarMisPosts(posts) {
             ? `<div class="post-image-container"><img src="${post.image}" alt="Imagen del post" class="post-image"/></div>`
             : '';
 
-        let userImage = post.user.profilePicture
-            ? `<img src="${post.user.profilePicture}" alt="Foto de perfil" class="post-user-image"/>`
+        let userImage = post.user && post.user.profilePhoto
+            ? `<img src="${post.user.profilePhoto}" alt="Foto de perfil" class="post-user-image"/>`
             : `<img src="/background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="post-user-image"/>`;
 
         postDiv.innerHTML = `
@@ -197,14 +197,14 @@ function mostrarMisPosts(posts) {
             </div>
             ${imageHTML}
             <div class="post-footer">
-                <!-- Usamos data-post-id para almacenar el postId -->
-                <button class="btn-edit" data-post-id="${post.id_post}"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn-delete" data-post-id="${post.id_post}"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn-edit" data-post-id="${post.postId}"><i class="fa fa-edit"></i> Edit</button>
+                <button class="btn-delete" data-post-id="${post.postId}"><i class="fa fa-trash"></i> Delete</button>
             </div>
         `;
 
         contenedorPost.appendChild(postDiv);
 
+        // Añadimos el evento de edición
         const btnEdit = postDiv.querySelector('.btn-edit');
         btnEdit.addEventListener('click', (e) => {
             const postId = e.target.closest('button').dataset.postId;
@@ -215,8 +215,6 @@ function mostrarMisPosts(posts) {
             }
             editarPost(postId);
         });
-
-
 
         // Añadimos el evento de eliminación para cada botón
         const btnDelete = postDiv.querySelector('.btn-delete');
@@ -407,84 +405,12 @@ function cancelarEdicion() {
 
 // POSSSSSSSTTTT
 
-async function editarPost(postId) {
-    try {
-        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('No se pudo obtener los detalles del post');
-        }
-
-        const post = await response.json();
-        const editModal = document.getElementById('editPostModal');
-        if (!editModal) {
-            console.error('No se encontró el modal de edición');
-            return;
-        }
-
-        document.getElementById('editPostContent').value = post.content;
-        document.getElementById('editPostImage').value = post.image || '';
-        editModal.dataset.postId = postId;
-        editModal.style.display = 'block';
-
-    } catch (error) {
-        console.error('Error al cargar los detalles del post:', error);
-        alert('No se pudo cargar el post para edición');
-    }
-}
-
-async function eliminarPost(postId) {
-    const confirmacion = confirm('¿Estás seguro de que quieres eliminar este post?');
-
-    if (!confirmacion) {
+function crearModalEditarPost() {
+    const modal = document.getElementById('editPostModal');
+    if (!modal) {
+        console.error('No se encontró el modal de edición');
         return;
     }
-
-    try {
-        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('No se pudo eliminar el post');
-        }
-        obtenerMisPosts();
-
-        alert('Post eliminado correctamente');
-
-    } catch (error) {
-        console.error('Error al eliminar el post:', error);
-        alert('No se pudo eliminar el post');
-    }
-}
-
-function createEditPostModal() {
-    const modal = document.createElement('div');
-    modal.id = 'editPostModal';
-    modal.className = 'modal';
-    modal.style.display = 'none';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <h2>Edit Post</h2>
-            <textarea id="editPostContent" rows="4" cols="50"></textarea>
-            <input type="text" id="editPostImage" placeholder="Image URL (optional)">
-            <div class="modal-buttons">
-                <button id="saveEditPost">Save Changes</button>
-                <button id="cancelEditPost">Cancel</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
 
     document.getElementById('saveEditPost').addEventListener('click', async () => {
         const postId = modal.dataset.postId;
@@ -505,16 +431,15 @@ function createEditPostModal() {
             });
 
             if (!response.ok) {
-                throw new Error('No se pudo actualizar el post ${response.status}');
+                throw new Error('No se pudo actualizar el post');
             }
             modal.style.display = 'none';
             obtenerMisPosts();
 
-            alert('Post updated successfully');
-
+            alert('Post actualizado correctamente');
         } catch (error) {
             console.error('Error al actualizar el post:', error);
-            alert('Could not update the post');
+            alert('No se pudo actualizar el post');
         }
     });
 
@@ -523,4 +448,115 @@ function createEditPostModal() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', createEditPostModal);
+async function editarPost(postId) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo obtener los detalles del post');
+        }
+
+        const post = await response.json();
+        const editModal = document.getElementById('editPostModal');
+
+        if (!editModal) {
+            console.error('No se encontró el modal de edición');
+            return;
+        }
+
+        document.getElementById('editPostContent').value = post.content;
+        document.getElementById('editPostImage').value = post.image || '';
+        
+        const currentDate = new Date().toISOString();
+        post.publicationDate = currentDate;
+        document.getElementById('editPostDate').textContent = new Date(currentDate).toLocaleString();
+
+        editModal.dataset.postId = postId;
+        editModal.style.display = 'block';
+
+    } catch (error) {
+        console.error('Error al cargar los detalles del post:', error);
+        alert('No se pudo cargar el post para edición');
+    }
+}
+
+async function guardarPostEditado(postId) {
+    const postEditado = {
+        content: document.getElementById('editPostContent').value.trim(),
+        image: document.getElementById('editPostImage').value.trim()
+    };
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+            method: 'PUT', 
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify(postEditado)
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al guardar el post');
+        }
+
+        const updatedPost = await response.json();
+        alert('Post actualizado correctamente');
+        
+        document.getElementById('postContent').textContent = updatedPost.content;
+        document.getElementById('postImage').src = updatedPost.image || 'default-image.png';
+
+    } catch (error) {
+        console.error('Error al actualizar el post:', error);
+        alert('No se pudo actualizar el post');
+    }
+}
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    crearModalEditarPost();
+});
+
+
+
+
+
+// Función para eliminar un post
+async function eliminarPost(postId) {
+    const confirmacion = confirm('¿Estás seguro de que quieres eliminar este post?');
+
+    if (!confirmacion) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo eliminar el post');
+        }
+        
+        document.getElementById(postId)?.remove();
+        alert('Post eliminado correctamente');
+        window.location.href = "./profile.html";
+
+    } catch (error) {
+        console.error('Error al eliminar el post:', error);
+        alert('No se pudo eliminar el post');
+    }
+}
