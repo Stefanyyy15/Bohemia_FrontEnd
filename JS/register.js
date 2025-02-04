@@ -108,5 +108,5 @@ async function agregarUsuario(url) {
 
 document.getElementById("btn-register").addEventListener("click", () => {
     agregarUsuario(urlUser);
-    window.location.href = "../Index.html";
+    window.location.href = "../login.html";
 });
