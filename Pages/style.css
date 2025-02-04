@@ -461,7 +461,6 @@
     border-radius: 4px;
     cursor: pointer;
 }
-
 #editProfileForm {
     display: none;
     flex-direction: column;
@@ -475,16 +474,11 @@
     border: 1px solid #ccc;
     border-radius: 15px;
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
+    border: 2px solid red;
 }
-
-.block {
-    display: block;
-}
-
 #editProfileForm button:hover {
     background-color: #6f523b;
 }
-
 #btn-close {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
@@ -618,7 +612,6 @@
 
 /* SESION DE BUSQUEDA */
 
-
 .search-container {
     display: flex;
     justify-content: center;
@@ -744,6 +737,12 @@
     width: 80%;
     max-width: 500px;
     text-align: center;
+    border-radius: 25px;
+    font-family: 'Glass Antiqua';
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10%;
 }
 
 .modal-content textarea,
@@ -751,6 +750,7 @@
     width: 100%;
     margin: 10px 0;
     padding: 10px;
+    font-family: 'Glass Antiqua';
 }
 
 .modal-buttons {
@@ -761,6 +761,15 @@
 .modal-buttons button {
     padding: 10px 20px;
     margin: 0 10px;
+    background: #6f523b;
+    color: white;
+    font-family: 'Glass Antiqua';
+    border: none;
+    padding: 5px 10px;
+    height: 5vh;
+    width: 7vw;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 @media (max-width: 750px) {

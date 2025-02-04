@@ -518,17 +518,9 @@ async function guardarPostEditado(postId) {
     }
 }
 
-
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
     crearModalEditarPost();
 });
-
-
-
-
 
 // Función para eliminar un post
 async function eliminarPost(postId) {
