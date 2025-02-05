@@ -165,7 +165,7 @@ async function obtenerLikes(postId) {
 
 async function obtenerComentarios(postId) {
     try {
-        const response = await fetch(`http://localhost:8080/api/comment/reaction/${postId}`, {
+        const response = await fetch(`http://localhost:8080/api/comment/post/${postId}`, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
