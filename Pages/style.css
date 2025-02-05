@@ -461,20 +461,28 @@
     border-radius: 4px;
     cursor: pointer;
 }
-#editProfileForm {
+#oscuro {
     display: none;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#editProfileForm {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    position: absolute;
     width: 30%;
-    margin-right: 30%;
-    margin-top: 10%;
     background-color: white;
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 15px;
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
-    border: 2px solid red;
+    margin-left: 35%;
+    margin-top: 8%;
 }
 #editProfileForm button:hover {
     background-color: #6f523b;

@@ -339,7 +339,7 @@ async function guardarCambios() {
                 profilePhotoElement.src = data.profilePhoto;
             }
 
-            document.getElementById('editProfileForm').style.display = "none";
+            document.getElementById('oscuro').style.display = "none";
 
             alert("Perfil actualizado correctamente.");
         }
@@ -388,16 +388,16 @@ function editarPerfil() {
     } else {
         console.error("No se encontraron datos de usuario en localStorage");
     }
-    const editProfileForm = document.getElementById('editProfileForm');
-    if (editProfileForm) {
-        editProfileForm.style.display = 'block';
+    const oscuro = document.getElementById('oscuro');
+    if (oscuro) {
+        oscuro.style.display = 'block';
     }
 }
 
 function cancelarEdicion() {
-    const editProfileForm = document.getElementById('editProfileForm');
-    if (editProfileForm) {
-        editProfileForm.style.display = "none";
+    const oscuro = document.getElementById('oscuro');
+    if (oscuro) {
+        oscuro.style.display = "none";
     } else {
         console.error('No se encontró el formulario de edición');
     }
