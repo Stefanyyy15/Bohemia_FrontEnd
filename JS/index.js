@@ -77,16 +77,11 @@ function mostrarPosts(posts) {
           `;
 
         contenedorPost.appendChild(postDiv);
-
-        // Obtener cantidad de likes del post
         obtenerLikes(post.postId);
-
-        // Evento para dar like
         postDiv.querySelector(".btn-like").addEventListener("click", () => {
             agregarLike(post.postId);
         });
 
-        // Evento para enviar comentario
         const btnEnviarComentario = postDiv.querySelector(".btn-enviar-comentario");
         btnEnviarComentario.addEventListener("click", () => {
             const comentarioInput = postDiv.querySelector("input.comentario-texto");
@@ -188,6 +183,7 @@ async function obtenerComentarios(postId) {
 }
 
 function mostrarComentariosEnInterfaz(postId, comentarios) {
+    comentarios.sort((a, b) => new Date(b.commentDate) - new Date(a.commentDate));
     const postDiv = document.getElementById(`post-${postId}`);
     if (!postDiv) return;
 
@@ -215,18 +211,51 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
         comentarioElement.innerHTML = `
             <div class="comentario-header">
                 <div class="comentario-user-info">
-                    ${userImage}
-                    <span class="comentario-usuario">${comentario.user.username}</span>
+                    <div class="imageUsername">
+                        ${userImage}
+                        <span class="comentario-usuario">${comentario.user.username}</span>
+                    </div>
                     <span class="comentario-fecha">${fechaLocal}</span>
                 </div>
             </div>
             <div class="comentario-contenido">
                 <p class="comentario-texto">${comentario.comment}</p>
+            <button class="eliminar-comentario" id="botonesComment"><i class="fa-solid fa-trash fa-1x"></i></button>
+            <button class="editar-comentario" id="botonesComment"><i class="fa-solid fa-pen-to-square fa-1x"></i></button>
             </div>
         `;
 
+        const eliminarBoton = comentarioElement.querySelector('.eliminar-comentario');
+        eliminarBoton.addEventListener('click', function () {
+            eliminarComentario(postId, comentario.id_comment);
+        });
+
         contenedorComentarios.appendChild(comentarioElement);
     });
+}
+
+async function eliminarComentario(postId, commentId) {
+    if (confirm("¿Estás seguro de que deseas eliminar este comentario?")) {
+        try {
+            const respuesta = await fetch(`http://localhost:8080/api/comment/${commentId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token"),
+                }
+            });
+            if (respuesta.ok) {
+                // Eliminar el comentario del DOM
+                const comentarioElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                if (comentarioElement) {
+                    comentarioElement.remove();
+                }
+            } else {
+                console.error("Error al eliminar el comentario");
+            }
+        } catch (error) {
+            console.error("Error al eliminar el comentario:", error);
+        }
+    }
 }
 
 async function agregarComentario(postId, contenidoComentario) {
@@ -237,11 +266,11 @@ async function agregarComentario(postId, contenidoComentario) {
     }
 
     const comentario = {
-    user: { id_user: user.id_user },
-    comment: contenidoComentario,
-    commentDate: new Date(),
-    post: { postId: parseInt(postId, 10) }
-};
+        user: { id_user: user.id_user },
+        comment: contenidoComentario,
+        commentDate: new Date(),
+        post: { postId: parseInt(postId, 10) }
+    };
 
 
     try {

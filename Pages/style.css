@@ -320,12 +320,16 @@
     background-color: #f9f9f9;
     border-radius: 5px;
     display: none;
+    overflow: scroll;
+    width: 45vw;
+    height: 30vh;
 }
-
 .comentario {
     display: flex;
+    flex-direction: column;
     align-items: center;
     margin-bottom: 10px;
+    border-bottom-style:groove;
 }
 
 .comment-user-image {
@@ -368,7 +372,32 @@
     border-radius: 15px;
     font-family: 'Glass Antiqua';
 }
-
+.comentario-header{
+    width: 100%;
+}
+.comentario-user-info{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+.imageUsername{
+  display: flex;  
+  align-items: center;
+}
+.comentario-contenido{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 2%;
+}
+#botonesComment{
+    background-color: #f9f9f9;
+    color: #6f523b;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+}
 /* CSS PARA LA PAGINA DE PERFIL Y DE ACTIVIDADES */
 #BodyProfileAct {
     background: url("../background/fondoPrincipal.png");
