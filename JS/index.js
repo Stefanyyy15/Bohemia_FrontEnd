@@ -9,6 +9,7 @@ window.addEventListener("load", function () {
 
 const urlPosts = "http://localhost:8080/api/post";
 
+
 async function obtenerPosts(url) {
     try {
         const respuesta = await fetch(url, {
@@ -29,24 +30,24 @@ async function obtenerPosts(url) {
     }
 }
 
-async function mostrarPosts(posts) {
+function mostrarPosts(posts) {
     posts.sort((a, b) => new Date(b.publicationDate) - new Date(a.publicationDate));
 
     const contenedorPost = document.querySelector(".ContenedorPost");
     contenedorPost.innerHTML = '';
 
-    posts.forEach(post => {
+    posts.forEach(async (post) => {
         const postDiv = document.createElement("div");
         postDiv.classList.add("post");
         postDiv.setAttribute("id", `post-${post.postId}`);
 
         let imageHTML = post.image ? `<div class="post-image-container">
-                              <img src="${post.image}" alt="Imagen del post" class="post-image"/>
+                            <img src="${post.image}" alt="Imagen del post" class="post-image"/>
                             </div>` : '';
 
         let userImage = post.user.profilePhoto
             ? `<img src="${post.user.profilePhoto}" alt="Foto de perfil" class="post-user-image"/>`
-            : `<img src="/images/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="post-user-image"/>`;
+            : `<img src="/background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="post-user-image"/>`;
 
         const fechaLocal = new Date(post.publicationDate).toLocaleString("es-ES", { hour12: true });
 
@@ -63,7 +64,9 @@ async function mostrarPosts(posts) {
               </div>
               ${imageHTML}
               <div class="post-footer">
-                  <button class="btn-like"><i class="fa fa-heart"></i> Like</button>
+                  <button class="btn-like" data-post-id="${post.postId}">
+                      <i class="fa fa-heart"></i> <span class="like-count">0</span> Likes
+                  </button>
                   <button class="btn-comment"><i class="fa fa-comment"></i> Comment</button>
               </div>
               <div class="comentarios" style="display: none;"></div>
@@ -75,151 +78,157 @@ async function mostrarPosts(posts) {
 
         contenedorPost.appendChild(postDiv);
 
-        // Lógica para comentarios
+        // Obtener cantidad de likes del post
+        obtenerLikes(post.postId);
+
+        // Evento para dar like
+        postDiv.querySelector(".btn-like").addEventListener("click", () => {
+            agregarLike(post.postId);
+        });
+
+        // Evento para enviar comentario
         const btnEnviarComentario = postDiv.querySelector(".btn-enviar-comentario");
         btnEnviarComentario.addEventListener("click", () => {
-            const inputComentario = postDiv.querySelector(".comentario-texto");
-            const contenidoComentario = inputComentario.value.trim();
+            const comentarioInput = postDiv.querySelector("input.comentario-texto");
+            const contenidoComentario = comentarioInput.value.trim();
+
             if (contenidoComentario) {
                 agregarComentario(post.postId, contenidoComentario);
-                inputComentario.value = "";
+                comentarioInput.value = "";
             }
         });
 
-        // Lógica para mostrar/ocultar comentarios
-        postDiv.querySelector(".btn-comment").addEventListener("click", () => {
+        postDiv.querySelector(".btn-comment").addEventListener("click", async () => {
             const comentariosDiv = postDiv.querySelector(".comentarios");
             const comentarioInput = postDiv.querySelector(".comentario-input");
 
+            comentarioInput.style.display = comentarioInput.style.display === "none" ? "block" : "none";
+
             if (comentariosDiv.style.display === "none") {
                 comentariosDiv.style.display = "block";
-                comentarioInput.style.display = "block";
-                // Obtener los comentarios desde la base de datos cuando se muestran
-                obtenerComentarios(post.postId);
+                await obtenerComentarios(post.postId);
             } else {
                 comentariosDiv.style.display = "none";
-                comentarioInput.style.display = "none";
             }
         });
-
-        // Cargar los comentarios al cargar la página
-        obtenerComentarios(post.postId);
     });
 }
 
+async function agregarLike(postId) {
+    try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const response = await fetch(`http://localhost:8080/api/reaction/like`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            },
+            body: JSON.stringify({
+                user: { id_user: user.id_user },
+                post: { postId: postId }
+            }),
+        });
 
-obtenerPosts(urlPosts);
+        if (response.ok) {
+            obtenerLikes(postId);
+        } else {
+            console.error("Error al dar like");
+        }
+    } catch (error) {
+        console.error("Error en la solicitud de like:", error);
+    }
+}
 
+async function obtenerLikes(postId) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/reaction/post/${postId}/likes`, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            },
+        });
 
-async function eliminarComentario(commentId) {
-    if (confirm("¿Estás seguro de que deseas eliminar este comentario?")) {
-        try {
-            const respuesta = await fetch(`http://localhost:8080/api/comment/${commentId}`, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("token"),
-                }
-            });
-
-            if (respuesta.ok) {
-                // Eliminar el comentario del DOM
-                const comentarioElement = document.querySelector(`[data-comment-id="${commentId}"]`);
-                if (comentarioElement) {
-                    comentarioElement.remove();
-                }
-            } else {
-                console.error("Error al eliminar el comentario");
+        if (response.ok) {
+            const likeCount = await response.json();
+            const postDiv = document.getElementById(`post-${postId}`);
+            if (postDiv) {
+                const likeCountElement = postDiv.querySelector(".like-count");
+                likeCountElement.textContent = likeCount || 0;
             }
-        } catch (error) {
-            console.error("Error en la solicitud de eliminación:", error);
+        } else {
+            console.error("Error al obtener los likes:", response.status);
+        }
+    } catch (error) {
+        console.error("Error en la petición de likes:", error);
+    }
+}
+
+
+async function obtenerComentarios(postId) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/comment/reaction/${postId}`, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        mostrarComentariosEnInterfaz(postId, data);
+    } catch (error) {
+        console.error('Error al cargar los comentarios del post ' + postId + ':', error);
+        const postDiv = document.getElementById(`post-${postId}`);
+        if (postDiv) {
+            const comentariosDiv = postDiv.querySelector(".comentarios");
+            comentariosDiv.innerHTML = '<p class="error-comentarios">Error al cargar los comentarios. Intente nuevamente.</p>';
         }
     }
 }
 
-// Función para obtener los comentarios de un post específico
-function obtenerComentarios(postId) {
-    fetch(`http://localhost:8080/api/comments/post/${postId}`)
-        .then(response => response.json())
-        .then(data => {
-            mostrarComentariosEnInterfaz(postId, data);
-        })
-        .catch(error => console.error('Error al cargar los comentarios:', error));
-}
-
-// Función para mostrar los comentarios en el contenedor correcto
 function mostrarComentariosEnInterfaz(postId, comentarios) {
     const postDiv = document.getElementById(`post-${postId}`);
+    if (!postDiv) return;
+
     const contenedorComentarios = postDiv.querySelector(".comentarios");
-    contenedorComentarios.innerHTML = ''; // Limpiar el contenedor antes de agregar los comentarios
+    contenedorComentarios.innerHTML = '';
+
+    if (comentarios.length === 0) {
+        contenedorComentarios.innerHTML = '<p class="no-comentarios">No hay comentarios aún.</p>';
+        return;
+    }
 
     comentarios.forEach(comentario => {
         const comentarioElement = document.createElement('div');
         comentarioElement.classList.add('comentario');
+        comentarioElement.setAttribute("data-comment-id", comentario.id_comment);
+
+        let userImage = comentario.user.profilePhoto
+            ? `<img src="${comentario.user.profilePhoto}" alt="Foto de perfil" class="comment-user-image"/>`
+            : `<img src="/background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="comment-user-image"/>`;
+
+        const fechaLocal = new Date(comentario.commentDate).toLocaleString("es-ES", {
+            hour12: true
+        });
+
         comentarioElement.innerHTML = `
-            <p>${comentario.comment}</p>
-            <p><small>Publicado por ${comentario.user.fullname}</small></p>
+            <div class="comentario-header">
+                <div class="comentario-user-info">
+                    ${userImage}
+                    <span class="comentario-usuario">${comentario.user.username}</span>
+                    <span class="comentario-fecha">${fechaLocal}</span>
+                </div>
+            </div>
+            <div class="comentario-contenido">
+                <p class="comentario-texto">${comentario.comment}</p>
+            </div>
         `;
+
         contenedorComentarios.appendChild(comentarioElement);
     });
 }
 
-
-// Lógica para mostrar/ocultar comentarios y cargarlos desde el backend
-document.querySelectorAll(".btn-comment").forEach(btn => {
-    btn.addEventListener("click", async (e) => {
-        const postDiv = e.target.closest(".post");
-        const postId = postDiv.getAttribute("id").split("-")[1]; // Obtener postId
-        const comentariosDiv = postDiv.querySelector(".comentarios");
-        const comentarioInput = postDiv.querySelector(".comentario-input");
-
-        // Mostrar u ocultar los comentarios
-        if (comentariosDiv.style.display === "none" || comentariosDiv.style.display === "") {
-            comentariosDiv.style.display = "block";
-            comentarioInput.style.display = "block";
-            // Obtener los comentarios solo la primera vez que se abre el contenedor
-            await obtenerComentarios(postId);
-        } else {
-            comentariosDiv.style.display = "none";
-            comentarioInput.style.display = "none";
-        }
-    });
-});
-
-
-// Función para mostrar un solo comentario
-function mostrarComentarioEnInterfaz(postId, comentario) {
-    const postDiv = document.getElementById(`post-${postId}`);
-    const comentariosDiv = postDiv.querySelector(".comentarios");
-
-    const comentarioDiv = document.createElement("div");
-    comentarioDiv.classList.add("comentario");
-    comentarioDiv.setAttribute("data-comment-id", comentario.id_comment);
-
-    let userImage = comentario.user.profilePhoto
-        ? `<img src="${comentario.user.profilePhoto}" alt="Foto de perfil" class="comment-user-image"/>`
-        : `<img src="/images/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="comment-user-image"/>`;
-
-    const fechaLocal = new Date(comentario.commentDate).toLocaleString("es-ES", {
-        hour12: true
-    });
-
-    comentarioDiv.innerHTML = `
-        <div class="comentario-header">
-            <div class="comentario-user-info">
-                ${userImage}
-                <span class="comentario-usuario">${comentario.user.username}</span>
-                <span class="comentario-fecha">${fechaLocal}</span>
-            </div>
-        </div>
-        <div class="comentario-contenido">
-            <p class="comentario-texto">${comentario.comment}</p>
-        </div>
-    `;
-
-    comentariosDiv.appendChild(comentarioDiv);
-}
-
-// Y luego en la función agregarComentario:
 async function agregarComentario(postId, contenidoComentario) {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id_user) {
@@ -227,26 +236,13 @@ async function agregarComentario(postId, contenidoComentario) {
         return;
     }
 
-    const postDiv = document.getElementById(`post-${postId}`);
-    if (!postDiv) {
-        console.error("No se encontró el post con ID:", postId);
-        return;
-    }
-
-    const postUserInfo = postDiv.querySelector(".post-user-info");
-    const extractedPostId = postUserInfo ? postUserInfo.getAttribute("data-post-id") : null;
-
-    if (!extractedPostId) {
-        console.error("No se pudo obtener el ID del post desde post-user-info");
-        return;
-    }
-
     const comentario = {
-        user: { id_user: user.id_user },
-        comment: contenidoComentario,
-        commentDate: new Date(),
-        post: { postId: parseInt(extractedPostId, 10) }
-    };
+    user: { id_user: user.id_user },
+    comment: contenidoComentario,
+    commentDate: new Date(),
+    post: { postId: parseInt(postId, 10) }
+};
+
 
     try {
         const respuesta = await fetch("http://localhost:8080/api/comment", {
@@ -260,13 +256,13 @@ async function agregarComentario(postId, contenidoComentario) {
 
         if (respuesta.ok) {
             const nuevoComentario = await respuesta.json();
-            console.log("Comentario agregado con éxito:", nuevoComentario);
-            mostrarComentarioEnInterfaz(extractedPostId, nuevoComentario);
+            mostrarComentarioEnInterfaz(postId, nuevoComentario);
         } else {
-            const errorData = await respuesta.json();
-            console.error("Error al agregar el comentario:", errorData);
+            console.error("Error al agregar el comentario");
         }
     } catch (error) {
         console.error("Error en la solicitud:", error);
     }
 }
+
+obtenerPosts(urlPosts);
