@@ -284,7 +284,7 @@ async function guardarCambios() {
 
     const userId = user.id_user;
     const fullname = document.getElementById('editFullname').value.trim();
-    const username = document.getElementById('editUsername').value.trim();
+    let username = document.getElementById('editUsername').value.trim().replace(/\s+/g, "_");
     const email = document.getElementById('editEmail').value.trim();
     const password = document.getElementById('editPassword').value;
     const biography = document.getElementById('editBiography').value.trim();
@@ -355,6 +355,7 @@ async function guardarCambios() {
         alert("Hubo un error. Intenta nuevamente.");
     }
 }
+
 
 
 

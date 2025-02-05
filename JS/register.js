@@ -60,7 +60,7 @@ async function peticionPost(url, data) {
 
 async function agregarUsuario(url) {
     const fullname = document.getElementById("fullname").value.trim();
-    const username = document.getElementById("username").value.trim();
+    let username = document.getElementById("username").value.trim().replace(/\s+/g, "_");
     const mail = document.getElementById("mail").value.trim();
     const password = document.getElementById("password").value;
 
@@ -101,7 +101,7 @@ async function agregarUsuario(url) {
     }
 }
 
-
 document.getElementById("btn-register").addEventListener("click", () => {
     agregarUsuario(urlUser);
 });
+
