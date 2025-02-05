@@ -283,15 +283,22 @@ async function guardarCambios() {
     }
 
     const userId = user.id_user;
-    const fullname = document.getElementById('editFullname').value;
-    const username = document.getElementById('editUsername').value;
-    const email = document.getElementById('editEmail').value;
+    const fullname = document.getElementById('editFullname').value.trim();
+    const username = document.getElementById('editUsername').value.trim();
+    const email = document.getElementById('editEmail').value.trim();
     const password = document.getElementById('editPassword').value;
-    const biography = document.getElementById('editBiography').value;
-    const profilePhotoUrl = document.getElementById('editProfilePhoto').value;
+    const biography = document.getElementById('editBiography').value.trim();
+    const profilePhotoUrl = document.getElementById('editProfilePhoto').value.trim();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!fullname || !username || !email) {
         alert("El nombre completo, nombre de usuario y correo son obligatorios.");
+        return;
+    }
+
+    if (!emailRegex.test(email)) {
+        alert("Ingrese un correo electrónico válido.");
         return;
     }
 
@@ -348,6 +355,7 @@ async function guardarCambios() {
         alert("Hubo un error. Intenta nuevamente.");
     }
 }
+
 
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -43,29 +43,36 @@ async function peticionPost(url, data) {
 }
 
 async function agregarPost(url) {
-    const nuevoPost = {
-        content: document.getElementById("content").value.trim(),
-        image: document.getElementById("image").value.trim() || null,
-        user: { id_user: JSON.parse(localStorage.getItem('user')).id_user },
-        publicationDate: new Date().toISOString() 
-    };
-
-    if (!nuevoPost.content) {
-        alert("El contenido del post no puede estar vacío.");
+    const content = document.getElementById("content").value.trim();
+    const image = document.getElementById("image").value.trim() || null;
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (content.length < 5 || content.length > 500) {
+        alert("El contenido del post debe tener entre 5 y 500 caracteres.");
         return;
     }
 
-    const postCreado = await peticionPost(url, nuevoPost);
+    const nuevoPost = {
+        content,
+        image,
+        user: { id_user: user.id_user },
+        publicationDate: new Date().toISOString()
+    };
 
-    if (postCreado) {
-        console.log("Post creado con éxito:", postCreado);
-        alert("Post creado correctamente");
-        window.location.href = "/Pages/Index.html";
-    } else {
-        alert("Error al crear el post");
+    try {
+        const postCreado = await peticionPost(url, nuevoPost);
+
+        if (postCreado) {
+            console.log("Post creado con éxito:", postCreado);
+            alert("Post creado correctamente");
+            window.location.href = "/Pages/Index.html";
+        } else {
+            alert("Error al crear el post");
+        }
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+        alert("Ocurrió un error al intentar crear el post.");
     }
 }
-
 
 
 document.getElementById("btn-create-post").addEventListener("click", () => {

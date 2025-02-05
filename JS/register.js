@@ -30,35 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 const urlUser = "http://localhost:8080/api/users";
 
-const peticionGet = async (url) => {
-    try {
-        const respuesta = await fetch(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjYW1wdXNjbCIsInN1YiI6IlBhekVuRWxBcmlwb3JvQGVtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3MzgyNTM2OTIsImV4cCI6MTczOTExNzY5Mn0.NF7WvRmMlRBj5qJ5BciFg2nT_Hs02WhhyMLdjSX7euf9Vx9X_zV914fxWPkNuQJJO7qZ0_nYNzh7j3GmLVxmgw'
-            }
-        });
-        console.log('Response status: ', respuesta.status);
-        if (respuesta.ok) {
-            const info = await respuesta.json();
-            console.log(info);
-            return info;
-        } else {
-            console.log('Error ', respuesta.status);
-            return null;
-        }
-    } catch (error) {
-        console.error('Error ', error);
-        return null;
-    }
-}
-
-const mostrarDatos = async (url) => {
-    const respuesta = await peticionGet(url);
-    console.log(respuesta);
-}
-
-mostrarDatos(urlUser);
 
 async function peticionPost(url, data) {
     try {
@@ -88,25 +59,49 @@ async function peticionPost(url, data) {
 // FUNCION PARA LA PAGINA REGISTRO
 
 async function agregarUsuario(url) {
-    const nuevoUsuario = {
-        fullname: document.getElementById("fullname").value.trim(),
-        username: document.getElementById("username").value.trim(),
-        mail: document.getElementById("mail").value.trim(),
-        password: document.getElementById("password").value,
-        profilePhoto: null,
-        biography: null
-    };
-    const usuarioCreado = await peticionPost(url, nuevoUsuario);
+    const fullname = document.getElementById("fullname").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const mail = document.getElementById("mail").value.trim();
+    const password = document.getElementById("password").value;
 
-    if (usuarioCreado) {
-        console.log("Usuario agregado con éxito:", usuarioCreado);
-        alert("Usuario registrado correctamente");
-    } else {
-        alert("Error al registrar el usuario");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!fullname || !username || !mail || !password) {
+        alert("Todos los campos son obligatorios.");
+        return;
+    }
+
+    if (!emailRegex.test(mail)) {
+        alert("Ingrese un correo electrónico válido.");
+        return;
+    }
+
+    const nuevoUsuario = {
+        fullname,
+        username,
+        mail,
+        password,
+        profilePhoto: "",
+        biography: ""
+    };
+
+    try {
+        const usuarioCreado = await peticionPost(url, nuevoUsuario);
+
+        if (usuarioCreado) {
+            console.log("Usuario agregado con éxito:", usuarioCreado);
+            alert("Usuario registrado correctamente");
+            window.location.href = "../login.html";
+        } else {
+            alert("Error al registrar el usuario");
+        }
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+        alert("Ocurrió un error al intentar registrar el usuario.");
     }
 }
 
+
 document.getElementById("btn-register").addEventListener("click", () => {
     agregarUsuario(urlUser);
-    window.location.href = "../login.html";
 });
