@@ -71,7 +71,7 @@ async function peticionPost(url, data, token) {
         } else {
             console.error('Error', respuesta.status);
             const textoError = await respuesta.text();
-            console.error('Detalle del error:', textoError);
+            console.error('Error detail:', textoError);
             return null;
         }
     } catch (error) {
@@ -92,7 +92,7 @@ const loginUsuario = async (email, password) => {
         });
 
         if (!respuesta.ok) {
-            alert("Usuario o contraseña incorrectos.");
+            alert("Incorrect username or password.");
             return false;
         }
 
@@ -100,13 +100,13 @@ const loginUsuario = async (email, password) => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        alert("Inicio de sesión exitoso.");
+        alert("Login successful.");
         window.location.href = "/Pages/Index.html";
 
         return true;
     } catch (error) {
-        console.error("Error al iniciar sesión:", error);
-        alert("Ocurrió un error, intenta nuevamente.");
+        console.error("Error logging in:", error);
+        alert("Error. Please try again");
         return false;
     }
 };
@@ -119,7 +119,7 @@ document.getElementById("btn-login").addEventListener("click", () => {
     if (email && password) {
         loginUsuario(email, password);
     } else {
-        alert("Por favor ingrese su correo y contraseña.");
+        alert("Please enter your email and password.");
     }
 });
 

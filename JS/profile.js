@@ -33,7 +33,7 @@ const peticionAutenticada = async (url, metodo = "GET", data = null) => {
         const respuesta = await fetch(url, opciones);
 
         if (respuesta.status === 401) {
-            alert("Sesión expirada. Inicia sesión nuevamente.");
+            alert("Session expired. Please log in again.");
             localStorage.removeItem("token");
             window.location.href = "./login.html";
             return null;
@@ -41,7 +41,7 @@ const peticionAutenticada = async (url, metodo = "GET", data = null) => {
 
         return await respuesta.json();
     } catch (error) {
-        console.error("Error en la petición:", error);
+        console.error("Error in the request", error);
         return null;
     }
 };
@@ -51,7 +51,7 @@ const peticionAutenticada = async (url, metodo = "GET", data = null) => {
 const showUserProfile = () => {
     let token = localStorage.getItem('token');
     if (!token) {
-        alert("No se encontró un token. Por favor, inicie sesión.");
+        alert("No listings found. Please log in.");
         window.location.href = '../login.html';
         return;
     }
@@ -67,7 +67,7 @@ const showUserProfile = () => {
         }
     })
         .then(response => {
-            console.log('Estado de la respuesta:', response.status);
+            console.log('Response status:', response.status);
             if (!response.ok) {
                 throw new Error(`Error HTTP: ${response.status}`);
             }
@@ -91,7 +91,7 @@ const showUserProfile = () => {
                         profilePhotoElement.src = user.profilePhoto;
                     }
                 } else {
-                    console.error('No se encontraron los elementos en el DOM');
+                    console.error('No elements were found in the DOM');
                 }
 
                 document.getElementById('contenido').classList.remove('hidden');
@@ -103,10 +103,10 @@ const showUserProfile = () => {
         .catch(error => {
             console.error('Error:', error);
             if (error.message.includes('401')) {
-                alert('Sesión expirada. Por favor, inicie sesión nuevamente.');
+                alert('Session expired. Please log in again.');
                 window.location.href = '../login.html';
             } else {
-                alert('Error al cargar el perfil. Por favor, intente nuevamente.');
+                alert('Error loading profile. Please try again.');
             }
         });
 }
@@ -125,7 +125,7 @@ async function obtenerMisPosts() {
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (!user || !user.id_user) {
-        console.error("No se encontró un usuario válido en localStorage.");
+        console.error("No valid user found in localStorage.");
         return;
     }
 
@@ -139,18 +139,18 @@ async function obtenerMisPosts() {
             }
         });
 
-        console.log("Estado de la respuesta para posts:", respuesta.status);
+        console.log("Response status for posts:", respuesta.status);
 
         if (!respuesta.ok) {
             const errorText = await respuesta.text();
-            console.error("Error al obtener los posts:", errorText);
+            console.error("Error getting posts:", errorText);
             return;
         }
 
         const posts = await respuesta.json();
         mostrarMisPosts(posts);
     } catch (error) {
-        console.error("Error al obtener los posts:", error);
+        console.error("Error getting posts:", error);
     }
 }
 
@@ -158,7 +158,7 @@ function mostrarMisPosts(posts) {
     posts.sort((a, b) => new Date(b.publicationDate) - new Date(a.publicationDate));
     const contenedorPost = document.querySelector(".contenedorMisPosts");
     if (!contenedorPost) {
-        console.error("No se encontró el contenedor de posts");
+        console.error("Posts container not found");
         return;
     }
 
@@ -167,7 +167,7 @@ function mostrarMisPosts(posts) {
     if (!posts || posts.length === 0) {
         const mensajeNoPosts = document.createElement("div");
         mensajeNoPosts.classList.add("no-posts-message");
-        mensajeNoPosts.textContent = "No hay publicaciones para mostrar";
+        mensajeNoPosts.textContent = "There are no posts to display";
         contenedorPost.appendChild(mensajeNoPosts);
         return;
     }
@@ -210,7 +210,7 @@ function mostrarMisPosts(posts) {
             const postId = e.target.closest('button').dataset.postId;
             console.log("Post ID:", postId);
             if (!postId) {
-                console.error("No se encontró el postId.");
+                console.error("The postId was not found.");
                 return;
             }
             editarPost(postId);
@@ -237,7 +237,7 @@ async function eliminarPerfil() {
     const token = obtenerToken();
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id_user) {
-        alert("No se pudo obtener el ID del usuario.");
+        alert("Failed to get user ID.");
         return;
     }
 
@@ -259,15 +259,15 @@ async function eliminarPerfil() {
         if (response.ok) {
             localStorage.removeItem("user");
             localStorage.removeItem("token");
-            alert("Tu perfil ha sido eliminado correctamente.");
+            alert("Your profile has been successfully deleted.");
             window.location.href = "../login.html";
         } else {
             const errorData = await response.json();
-            alert(`Error al eliminar el perfil: ${errorData.message || "Intenta nuevamente."}`);
+            alert(`Error deleting profile: ${errorData.message || "Please try again"}`);
         }
     } catch (error) {
-        console.error("Error al eliminar el perfil:", error);
-        alert("Hubo un error. Intenta nuevamente.");
+        console.error("Error deleting profile:", error);
+        alert("There was an error. Please try again.");
     }
 }
 
@@ -278,7 +278,7 @@ async function guardarCambios() {
     const token = obtenerToken();
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id_user) {
-        alert("No se pudo obtener el ID del usuario.");
+        alert("Failed to get user ID.");
         return;
     }
 
@@ -293,12 +293,12 @@ async function guardarCambios() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!fullname || !username || !email) {
-        alert("El nombre completo, nombre de usuario y correo son obligatorios.");
+        alert("Full name, username and email are required.");
         return;
     }
 
     if (!emailRegex.test(email)) {
-        alert("Ingrese un correo electrónico válido.");
+        alert("Please enter a valid email.");
         return;
     }
 
@@ -322,7 +322,7 @@ async function guardarCambios() {
         });
 
         if (!response.ok) {
-            alert("Hubo un error al guardar los cambios.");
+            alert("There was an error saving changes.");
             return;
         }
 
@@ -348,15 +348,13 @@ async function guardarCambios() {
 
             document.getElementById('oscuro').style.display = "none";
 
-            alert("Perfil actualizado correctamente.");
+            alert("Profile updated successfully.");
         }
     } catch (error) {
-        console.error("Error al guardar los cambios:", error);
-        alert("Hubo un error. Intenta nuevamente.");
+        console.error("Error saving changes:", error);
+        alert("There was an error. Please try again.");
     }
 }
-
-
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -395,7 +393,7 @@ function editarPerfil() {
         if (editBiographyInput) editBiographyInput.value = user.biography || '';
         if (editEmailInput) editEmailInput.value = user.mail || '';
     } else {
-        console.error("No se encontraron datos de usuario en localStorage");
+        console.error("No user data found in localStorage");
     }
     const oscuro = document.getElementById('oscuro');
     if (oscuro) {
@@ -408,7 +406,7 @@ function cancelarEdicion() {
     if (oscuro) {
         oscuro.style.display = "none";
     } else {
-        console.error('No se encontró el formulario de edición');
+        console.error('Edit form not found');
     }
 }
 
@@ -417,7 +415,7 @@ function cancelarEdicion() {
 function crearModalEditarPost() {
     const modal = document.getElementById('editPostModal');
     if (!modal) {
-        console.error('No se encontró el modal de edición');
+        console.error('Edit modal not found');
         return;
     }
 
@@ -440,15 +438,15 @@ function crearModalEditarPost() {
             });
 
             if (!response.ok) {
-                throw new Error('No se pudo actualizar el post');
+                throw new Error('The post could not be updated');
             }
             modal.style.display = 'none';
             obtenerMisPosts();
 
-            alert('Post actualizado correctamente');
+            alert('Post updated successfully');
         } catch (error) {
-            console.error('Error al actualizar el post:', error);
-            alert('No se pudo actualizar el post');
+            console.error('Error updating post:', error);
+            alert('The post could not be updated');
         }
     });
 
@@ -468,14 +466,14 @@ async function editarPost(postId) {
         });
 
         if (!response.ok) {
-            throw new Error('No se pudo obtener los detalles del post');
+            throw new Error('Could not get post details.');
         }
 
         const post = await response.json();
         const editModal = document.getElementById('editPostModal');
 
         if (!editModal) {
-            console.error('No se encontró el modal de edición');
+            console.error('Edit modal not found');
             return;
         }
 
@@ -490,8 +488,8 @@ async function editarPost(postId) {
         editModal.style.display = 'block';
 
     } catch (error) {
-        console.error('Error al cargar los detalles del post:', error);
-        alert('No se pudo cargar el post para edición');
+        console.error('Error loading post details:', error);
+        alert('The post could not be loaded for editing');
     }
 }
 
@@ -522,8 +520,8 @@ async function guardarPostEditado(postId) {
         document.getElementById('postImage').src = updatedPost.image || 'default-image.png';
 
     } catch (error) {
-        console.error('Error al actualizar el post:', error);
-        alert('No se pudo actualizar el post');
+        console.error('Error updating post:', error);
+        alert('The post could not be updated');
     }
 }
 
@@ -533,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Función para eliminar un post
 async function eliminarPost(postId) {
-    const confirmacion = confirm('¿Estás seguro de que quieres eliminar este post?');
+    const confirmacion = confirm('¿Are you sure you want to delete this post?');
 
     if (!confirmacion) {
         return;
@@ -549,7 +547,7 @@ async function eliminarPost(postId) {
         });
 
         if (!response.ok) {
-            throw new Error('No se pudo eliminar el post');
+            throw new Error('Could not delete post');
         }
         
         document.getElementById(postId)?.remove();
@@ -557,8 +555,8 @@ async function eliminarPost(postId) {
         window.location.href = "./profile.html";
 
     } catch (error) {
-        console.error('Error al eliminar el post:', error);
-        alert('No se pudo eliminar el post');
+        console.error('Could not delete post:', error);
+        alert('Could not delete post');
     }
 }
 
@@ -600,7 +598,7 @@ function createEditPostModal() {
             });
 
             if (!response.ok) {
-                throw new Error('No se pudo actualizar el post ${response.status}');
+                throw new Error('The post could not be updated ${response.status}');
             }
             modal.style.display = 'none';
             obtenerMisPosts();
@@ -608,7 +606,7 @@ function createEditPostModal() {
             alert('Post updated successfully');
 
         } catch (error) {
-            console.error('Error al actualizar el post:', error);
+            console.error('Error updating post:', error);
             alert('Could not update the post');
         }
     });
@@ -641,10 +639,10 @@ async function actualizarContadoresSeguidores() {
             }
         });
 
-        if (!response.ok) throw new Error("Error al actualizar contadores");
+        if (!response.ok) throw new Error("Error updating counters");
 
         const userData = await response.json();
-        console.log("Datos recibidos:", userData); 
+        console.log("Data received:", userData); 
 
         const followersCount = Array.isArray(userData.followers) ? userData.followers.length : 0;
         const followingCount = Array.isArray(userData.following) ? userData.following.length : 0;
@@ -653,13 +651,13 @@ async function actualizarContadoresSeguidores() {
         document.getElementById("following").textContent = `${followingCount} Following`;
 
     } catch (error) {
-        console.error("Error al actualizar contadores:", error);
+        console.error("Error updating counters:", error);
     }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("userFullname")) {
-        console.log("Mostrando perfil de usuario...");
+        console.log("Showing user profile...");
         showUserProfile();
     }
 });

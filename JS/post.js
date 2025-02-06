@@ -14,7 +14,7 @@ async function peticionPost(url, data) {
         const token = localStorage.getItem('token');
 
         if (!token) {
-            alert("No hay un token válido. Inicia sesión.");
+            alert("There is no valid token. Please log in.");
             return;
         }
         const respuesta = await fetch(url, {
@@ -33,7 +33,7 @@ async function peticionPost(url, data) {
         } else {
             console.error('Error', respuesta.status);
             const textoError = await respuesta.text();
-            console.error('Detalle del error:', textoError);
+            console.error('Error detail:', textoError);
             return null;
         }
     } catch (error) {
@@ -47,7 +47,7 @@ async function agregarPost(url) {
     const image = document.getElementById("image").value.trim() || null;
     const user = JSON.parse(localStorage.getItem('user'));
     if (content.length < 5 || content.length > 500) {
-        alert("El contenido del post debe tener entre 5 y 500 caracteres.");
+        alert("The content of the post must be between 5 and 500 characters.");
         return;
     }
 
@@ -62,15 +62,15 @@ async function agregarPost(url) {
         const postCreado = await peticionPost(url, nuevoPost);
 
         if (postCreado) {
-            console.log("Post creado con éxito:", postCreado);
-            alert("Post creado correctamente");
+            console.log("Post created successfully:", postCreado);
+            alert("Post created successfully");
             window.location.href = "/Pages/Index.html";
         } else {
-            alert("Error al crear el post");
+            alert("Error creating post");
         }
     } catch (error) {
-        console.error("Error en la solicitud:", error);
-        alert("Ocurrió un error al intentar crear el post.");
+        console.error("Error in request:", error);
+        alert("An error occurred while trying to create the post.");
     }
 }
 

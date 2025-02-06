@@ -23,10 +23,10 @@ async function obtenerPosts(url) {
             const posts = await respuesta.json();
             mostrarPosts(posts);
         } else {
-            console.error("Error al obtener los posts", respuesta.status);
+            console.error("Error getting posts", respuesta.status);
         }
     } catch (error) {
-        console.error("Error en la petición", error);
+        console.error("Error in request", error);
     }
 }
 
@@ -127,10 +127,10 @@ async function agregarLike(postId) {
         if (response.ok) {
             obtenerLikes(postId);
         } else {
-            console.error("Error al dar like");
+            console.error("Error liking");
         }
     } catch (error) {
-        console.error("Error en la solicitud de like:", error);
+        console.error("Error in like request:", error);
     }
 }
 
@@ -150,10 +150,10 @@ async function obtenerLikes(postId) {
                 likeCountElement.textContent = likeCount || 0;
             }
         } else {
-            console.error("Error al obtener los likes:", response.status);
+            console.error("Error getting likes:", response.status);
         }
     } catch (error) {
-        console.error("Error en la petición de likes:", error);
+        console.error("Error in request for likes:", error);
     }
 }
 
@@ -173,11 +173,11 @@ async function obtenerComentarios(postId) {
         const data = await response.json();
         mostrarComentariosEnInterfaz(postId, data);
     } catch (error) {
-        console.error('Error al cargar los comentarios del post ' + postId + ':', error);
+        console.error('Error loading post comments ' + postId + ':', error);
         const postDiv = document.getElementById(`post-${postId}`);
         if (postDiv) {
             const comentariosDiv = postDiv.querySelector(".comentarios");
-            comentariosDiv.innerHTML = '<p class="error-comentarios">Error al cargar los comentarios. Intente nuevamente.</p>';
+            comentariosDiv.innerHTML = '<p class="error-comentarios"></p>';
         }
     }
 }
@@ -235,7 +235,7 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
 }
 
 async function eliminarComentario(postId, commentId) {
-    if (confirm("¿Estás seguro de que deseas eliminar este comentario?")) {
+    if (confirm("Are you sure you want to delete this comment?")) {
         try {
             const respuesta = await fetch(`http://localhost:8080/api/comment/${commentId}`, {
                 method: "DELETE",
@@ -244,16 +244,15 @@ async function eliminarComentario(postId, commentId) {
                 }
             });
             if (respuesta.ok) {
-                // Eliminar el comentario del DOM
                 const comentarioElement = document.querySelector(`[data-comment-id="${commentId}"]`);
                 if (comentarioElement) {
                     comentarioElement.remove();
                 }
             } else {
-                console.error("Error al eliminar el comentario");
+                console.error("Error deleting comment");
             }
         } catch (error) {
-            console.error("Error al eliminar el comentario:", error);
+            console.error("Error deleting comment:", error);
         }
     }
 }
@@ -261,7 +260,7 @@ async function eliminarComentario(postId, commentId) {
 async function agregarComentario(postId, contenidoComentario) {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id_user) {
-        console.error("Usuario no autenticado o sin ID válido");
+        console.error("User not authenticated or without valid ID");
         return;
     }
 
@@ -287,10 +286,10 @@ async function agregarComentario(postId, contenidoComentario) {
             const nuevoComentario = await respuesta.json();
             mostrarComentarioEnInterfaz(postId, nuevoComentario);
         } else {
-            console.error("Error al agregar el comentario");
+            console.error("Error adding comment");
         }
     } catch (error) {
-        console.error("Error en la solicitud:", error);
+        console.error("Error in request", error);
     }
 }
 

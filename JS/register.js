@@ -67,12 +67,12 @@ async function agregarUsuario(url) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!fullname || !username || !mail || !password) {
-        alert("Todos los campos son obligatorios.");
+        alert("All fields are required.");
         return;
     }
 
     if (!emailRegex.test(mail)) {
-        alert("Ingrese un correo electrónico válido.");
+        alert("Please enter a valid email.");
         return;
     }
 
@@ -89,15 +89,15 @@ async function agregarUsuario(url) {
         const usuarioCreado = await peticionPost(url, nuevoUsuario);
 
         if (usuarioCreado) {
-            console.log("Usuario agregado con éxito:", usuarioCreado);
-            alert("Usuario registrado correctamente");
+            console.log("User added successfully:", usuarioCreado);
+            alert("User added successfully:");
             window.location.href = "../login.html";
         } else {
-            alert("Error al registrar el usuario");
+            alert("Error registering user");
         }
     } catch (error) {
-        console.error("Error en la solicitud:", error);
-        alert("Ocurrió un error al intentar registrar el usuario.");
+        console.error("Error in request:", error);
+        alert("An error occurred while trying to register the user.");
     }
 }
 
