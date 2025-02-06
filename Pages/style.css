@@ -767,7 +767,27 @@
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
 }
+.follow-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
+.follow-btn:not(.following) {
+    background-color: #1da1f2;
+    color: white;
+}
+
+.follow-btn.following {
+    background-color: #e0245e;
+    color: white;
+}
+
+.follow-btn:hover {
+    opacity: 0.9;
+}
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
