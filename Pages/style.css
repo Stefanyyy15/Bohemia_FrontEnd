@@ -26,7 +26,7 @@
 
 .RegisterBody {
     background: url("../background/fondoRegister.png");
-    background-size:contain;
+    background-size:cover;
     color: #6f523b;
 }
 
@@ -179,7 +179,8 @@
 /* CSS PARA LA PAGINA DE INICIO */
 #BodyInicio {
     background: url("/background/fondoPrincipal.png");
-    background-size: cover;
+    background-size:cover;
+    background-attachment: fixed;
     color: #6f523b;
 }
 
@@ -402,6 +403,7 @@
 #BodyProfileAct {
     background: url("../background/fondoPrincipal.png");
     background-size: cover;
+    background-attachment: fixed;
     color: #6f523b;
     margin: 0;
     padding: 0;
