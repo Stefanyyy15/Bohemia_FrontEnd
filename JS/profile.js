@@ -657,9 +657,73 @@ async function actualizarContadoresSeguidores() {
 
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("userFullname")) {
-        console.log("Showing user profile...");
         showUserProfile();
     }
 });
 
 document.addEventListener("DOMContentLoaded", createEditPostModal);
+
+document.getElementById("followers").addEventListener("click", () => showUserList("followers"));
+document.getElementById("following").addEventListener("click", () => showUserList("following"));
+
+async function showUserList(type) {
+    const token = obtenerToken();
+    const userId = obtenerIdUsuarioDesdeToken(token);
+    if (!userId) return;
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}/${type}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error("Error al obtener los datos");
+
+        const users = await response.json();
+        console.log(`Datos recibidos para ${type}:`, users);
+
+        const modal = document.getElementById("userListModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalUserList = document.getElementById("modalUserList");
+
+        modalTitle.textContent = type === "followers" ? "Seguidores" : "Seguidos";
+        modalUserList.innerHTML = "";
+
+        if (users.length > 0) {
+            users.forEach(user => {
+                const li = document.createElement("li");
+                li.classList.add("user-item");
+
+                const img = document.createElement("img");
+                img.src = user.profilePhoto || "/background/fotoPerfilPredeterminada.png"; 
+                img.alt = "Foto de perfil";
+                img.classList.add("user-photo");
+
+                const span = document.createElement("span");
+                span.textContent = user.username;
+                span.classList.add("user-name");
+
+                li.appendChild(img);
+                li.appendChild(span);
+                modalUserList.appendChild(li);
+            });
+        } else {
+            modalUserList.innerHTML = "<li>No hay usuarios</li>";
+        }
+
+        modal.style.display = "block";
+
+    } catch (error) {
+        console.error("Error al obtener usuarios:", error);
+    }
+}
+
+function closeUserListModal() {
+    document.getElementById("userListModal").style.display = "none";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("userModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+};

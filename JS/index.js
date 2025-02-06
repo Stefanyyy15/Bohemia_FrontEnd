@@ -157,6 +157,7 @@ async function obtenerLikes(postId) {
     }
 }
 
+// COMENTARIOOOOOOOOOS ÑAÑAÑA
 
 async function obtenerComentarios(postId) {
     try {
@@ -215,13 +216,17 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
                         ${userImage}
                         <span class="comentario-usuario">${comentario.user.username}</span>
                     </div>
-                    <span class="comentario-fecha">${fechaLocal}</span>
+                    <h6 class="comentario-fecha">${fechaLocal}</h6>
                 </div>
             </div>
             <div class="comentario-contenido">
                 <p class="comentario-texto">${comentario.comment}</p>
-            <button class="eliminar-comentario" id="botonesComment"><i class="fa-solid fa-trash fa-1x"></i></button>
-            <button class="editar-comentario" id="botonesComment"><i class="fa-solid fa-pen-to-square fa-1x"></i></button>
+                <button class="eliminar-comentario" id="botonesComment"><i class="fa-solid fa-trash fa-1x"></i></button>
+                <button class="editar-comentario"  id="botonesComment"><i class="fa-solid fa-pen-to-square fa-1x"></i></button>
+                <div class="editar-form" style="display: none;">
+                    <textarea class="textarea-editar">${comentario.comment}</textarea>
+                    <button class="guardar-edicion">Guardar</button>
+                </div>
             </div>
         `;
 
@@ -230,9 +235,28 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
             eliminarComentario(postId, comentario.id_comment);
         });
 
+        const editarBoton = comentarioElement.querySelector('.editar-comentario');
+        editarBoton.addEventListener('click', function () {
+            const editarForm = comentarioElement.querySelector('.editar-form');
+            const comentarioTexto = comentarioElement.querySelector('.comentario-texto');
+
+            comentarioTexto.style.display = 'none';
+            editarForm.style.display = 'block';
+        });
+
+        const guardarEdicionBoton = comentarioElement.querySelector('.guardar-edicion');
+        guardarEdicionBoton.addEventListener('click', function () {
+            const nuevoComentario = comentarioElement.querySelector('.textarea-editar').value.trim();
+            if (nuevoComentario) {
+                // Llamar a la función para actualizar el comentario
+                editarComentario(postId, comentario.id_comment, nuevoComentario);
+            }
+        });
+
         contenedorComentarios.appendChild(comentarioElement);
     });
 }
+
 
 async function eliminarComentario(postId, commentId) {
     if (confirm("Are you sure you want to delete this comment?")) {
@@ -292,5 +316,37 @@ async function agregarComentario(postId, contenidoComentario) {
         console.error("Error in request", error);
     }
 }
+
+async function editarComentario(postId, commentId, nuevoComentario) {
+    try {
+        const respuesta = await fetch(`http://localhost:8080/api/comment/${commentId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            },
+            body: JSON.stringify({ comment: nuevoComentario }),
+        });
+
+        if (respuesta.ok) {
+            const comentarioElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+            if (comentarioElement) {
+                comentarioElement.querySelector('.comentario-texto').textContent = nuevoComentario;
+                const comentarioContenido = comentarioElement.querySelector('.comentario-contenido');
+                comentarioContenido.querySelector('.editar-form').style.display = 'none';
+                comentarioContenido.querySelector('.comentario-texto').style.display = 'block';
+            }
+        } else {
+            const errorData = await respuesta.json();
+            console.error("Error updating comment:", errorData);
+        }
+    } catch (error) {
+        console.error("Error updating comment:", error);
+    }
+}
+
+
+
+
 
 obtenerPosts(urlPosts);
