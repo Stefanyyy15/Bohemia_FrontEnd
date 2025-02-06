@@ -26,7 +26,7 @@
 
 .RegisterBody {
     background: url("../background/fondoRegister.png");
-    background-size: cover;
+    background-size:contain;
     color: #6f523b;
 }
 
