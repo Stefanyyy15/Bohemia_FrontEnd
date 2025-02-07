@@ -5,7 +5,7 @@ Bohemia is a social network with a bohemian theme, designed to foster artistic e
 The frontend of Bohemia is a web application built with HTML, CSS, and JavaScript. It interacts with a RESTful API developed in Spring Boot to provide a seamless and engaging user experience. With a visually captivating interface, Bohemia encourages users to explore, connect, and express themselves in a unique and artistic way.
 
 ## Link Backend
-https://github.com/Stefanyyy15/Bohemia_Backend.git
+https://github.com/Stefanyyy15/Bohemia_BackEnd.git
 
 ![Imagen logo](background/imagenCarga.png)
 
