@@ -47,7 +47,7 @@ function mostrarPosts(posts) {
 
         let userImage = post.user.profilePhoto
             ? `<img src="${post.user.profilePhoto}" alt="Foto de perfil" class="post-user-image"/>`
-            : `<img src="/background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="post-user-image"/>`;
+            : `<img src="../background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="post-user-image"/>`;
 
         const fechaLocal = new Date(post.publicationDate).toLocaleString("es-ES", { hour12: true });
 
