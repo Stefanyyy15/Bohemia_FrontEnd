@@ -1,24 +1,31 @@
-window.addEventListener("load", function () {
+document.addEventListener("DOMContentLoaded", function () {
     let preloader = document.getElementById("preloader");
     preloader.classList.add("fade-out");
     setTimeout(() => {
         preloader.style.display = "none";
         document.getElementById("contenido").classList.remove("hidden");
-    }, 1000);
+    }, 500);
+
+    const userId = localStorage.getItem("id_user"); // Verifica el nombre correcto en localStorage
+    if (userId) {
+        getUnreadNotifications(userId);
+    }
 });
 
 async function getUnreadNotifications(userId) {
     try {
-        const response = await fetch(`/api/notification/unread/${userId}`);
+        const response = await fetch(`/api/notifications/unread/${userId}`);
         if (!response.ok) {
-            throw new Error("Error al obtener las notificaciones");
+            const errorMessage = await response.text();
+            throw new Error(`Error ${response.status}: ${errorMessage}`);
         }
         const notifications = await response.json();
         displayNotifications(notifications);
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error al obtener notificaciones:", error);
     }
 }
+
 function displayNotifications(notifications) {
     const container = document.getElementById("notifications-container");
     container.innerHTML = ""; // Limpiar antes de agregar nuevas
@@ -38,25 +45,21 @@ function displayNotifications(notifications) {
         container.appendChild(notificationItem);
     });
 }
+
 async function markAsRead(notificationId, button) {
     try {
-        const response = await fetch(`/api/notification/read/${notificationId}`, {
+        const response = await fetch(`/api/notifications/read/${notificationId}`, {
             method: "PUT",
         });
 
         if (!response.ok) {
-            throw new Error("Error al marcar como leída");
+            const errorMessage = await response.text();
+            throw new Error(`Error ${response.status}: ${errorMessage}`);
         }
 
         // Ocultar la notificación después de marcarla como leída
         button.parentElement.remove();
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error al marcar como leída:", error);
     }
 }
-document.addEventListener("DOMContentLoaded", function () {
-    const userId = localStorage.getItem("id_user"); // Obtener el ID del usuario autenticado
-    if (userId) {
-        getUnreadNotifications(userId);
-    }
-});
