@@ -123,6 +123,9 @@ The system must send notifications when:
 
 Notifications must be displayed in a dedicated section and marked as read or unread.  
 
+## Diagram ER
+
+![alt text](background/DiagramER.png)
 
 ## Tabs
 ![alt text](background/1.png)
