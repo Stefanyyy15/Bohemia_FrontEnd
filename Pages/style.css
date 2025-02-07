@@ -26,7 +26,8 @@
 
 .RegisterBody {
     background: url("../background/fondoRegister.png");
-    background-size:cover;
+    background-size: cover;
+    background-attachment: fixed;
     color: #6f523b;
 }
 
@@ -101,7 +102,7 @@
     border-radius: 20px;
     border: 1px solid white;
     background-color: white;
-    width: 30vw;
+    width: 20%;
     height: 5vh;
     letter-spacing: 1px;
 }
@@ -179,7 +180,7 @@
 /* CSS PARA LA PAGINA DE INICIO */
 #BodyInicio {
     background: url("/background/fondoPrincipal.png");
-    background-size:cover;
+    background-size: cover;
     background-attachment: fixed;
     color: #6f523b;
 }
@@ -325,6 +326,7 @@
     width: 45vw;
     height: 30vh;
 }
+
 .comentario {
     display: flex;
     flex-direction: column;
@@ -375,38 +377,46 @@
     border-radius: 15px;
     font-family: 'Glass Antiqua';
 }
-.comentario-header{
+
+.comentario-header {
     width: 100%;
 }
-.comentario-user-info{
+
+.comentario-user-info {
     display: flex;
     align-items: center;
     width: 100%;
     justify-content: space-between;
 }
-.imageUsername{
-  display: flex;  
-  align-items: center;
+
+.imageUsername {
+    display: flex;
+    align-items: center;
 }
-.comentario-contenido{
+
+.comentario-contenido {
     display: flex;
     gap: 10px;
     align-items: center;
     margin-bottom: 2%;
+    background-color: #f9f9f9a7;
 }
-#botonesComment{
+
+#botonesComment {
     background-color: #f9f9f9;
     color: #6f523b;
     border: none;
     font-size: 15px;
     cursor: pointer;
 }
-.textarea-editar{
+
+.textarea-editar {
     font-family: 'Glass Antiqua';
     border: none;
     border-radius: 5px;
 }
-.guardar-edicion{
+
+.guardar-edicion {
     margin-left: 10px;
     padding: 5px 10px;
     background-color: #6f523b;
@@ -416,6 +426,7 @@
     border-radius: 15px;
     font-family: 'Glass Antiqua';
 }
+
 /* CSS PARA LA PAGINA DE PERFIL Y DE ACTIVIDADES */
 #BodyProfileAct {
     background: url("../background/fondoPrincipal.png");
@@ -509,9 +520,10 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
 #oscuro {
     display: none;
-    position: fixed; 
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -532,9 +544,11 @@
     margin-left: 35%;
     margin-top: 8%;
 }
+
 #editProfileForm button:hover {
     background-color: #6f523b;
 }
+
 #btn-close {
     background-color: #6f523b;
     font-family: 'Glass Antiqua';
@@ -561,6 +575,12 @@
     margin-top: 10%;
 }
 
+.botonesEdit{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .cerrarSesion {
     display: flex;
     justify-content: center;
@@ -577,6 +597,7 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
 #userListModal {
     display: none;
     position: fixed;
@@ -606,6 +627,7 @@
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
+
 #modalUserList {
     list-style: none;
     padding: 0;
@@ -632,11 +654,13 @@
     font-size: 16px;
     font-weight: bold;
 }
-#followers, 
-#following{
+
+#followers,
+#following {
     cursor: pointer;
 }
-.close{
+
+.close {
     cursor: pointer;
 }
 
@@ -854,6 +878,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
 }
+
 .follow-btn:not(.following) {
     background-color: #1da1f2;
     color: white;
@@ -867,6 +892,7 @@
 .follow-btn:hover {
     opacity: 0.9;
 }
+
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
@@ -910,41 +936,253 @@
     cursor: pointer;
 }
 
-@media (max-width: 750px) {
-    #BodyInicio {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-
+@media (max-width: 1200px) {
+    .contenedorRegistro, .contenedorLogin {
+        width: 50vw;
+        margin-top: 15%;
     }
 
     .ContenedorPost {
-        width: 150vw;
-        margin-left: -3%;
-        margin-top: 5%;
-        display: flex;
+        width: 70vw;
+        margin-left: 15%;
+    }
+
+    #btn-register, #btn-login {
+        width: 15vw;
+    }
+
+    .iconos {
+        width: 8vw;
+        margin-left: 85%;
+    }
+}
+
+@media (max-width: 992px) {
+    .contenedorRegistro, .contenedorLogin {
+        width: 60vw;
+        margin-top: 20%;
+    }
+
+    .contenedorRegistro input, .contenedorLogin input {
+        width: 40vw;
+    }
+
+    .ContenedorPost {
+        width: 80vw;
+        margin-left: 10%;
+    }
+
+    .comentarios {
+        width: 70vw;
+    }
+
+    .comentario-texto {
+        width: 60vw;
+    }
+
+    .col1, .col2 {
+        width: 45%;
+    }
+
+    .photoPerfil {
+        width: 15vw;
+        height: 15vh;
+    }
+
+    .img {
+        width: 15vw;
+        height: 15vh;
+    }
+
+    #btn-edit, #btn-close, #btn-eliminar {
+        width: 15vw;
+    }
+
+    .iconos {
+        width: 10vw;
+        margin-left: 82%;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-bar {
+        padding: 0 20px;
+    }
+
+    .title {
+        font-size: 20px;
+        width: 100%;
+    }
+
+    .imagenLogo, .Login {
+       display: none;
+    }
+
+    .contenedorRegistro, .contenedorLogin {
+        width: 80vw;
+        margin-top: 25%;
+    }
+
+    .contenedorRegistro input, .contenedorLogin input {
+        width: 50vw;
+    }
+
+    .ContenedorPost {
+        width: 80vw;
+        margin: 15% auto 5% auto;
+        overflow: scroll;
+    }
+
+    #content{
+        width: 50vw;
+    } 
+
+    #btn-register, #btn-login, #btn-create-post {
+        width: 20vw;
+    }
+
+    .comentarios {
+        width: 80vw;
+    }
+
+    .comentario-texto {
+        width: 70vw;
+    }
+
+    .iconos {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        margin: 0;
+        flex-direction: row;
+        background-color: #eeece2;
+        padding: 10px;
+        z-index: 1000;
+    }
+
+    .fila {
         flex-direction: column;
         align-items: center;
     }
 
+    .col1, .col2 {
+        width: 90%;
+        text-align: center;
+    }
+
+    .photoPerfil {
+        width: 25vw;
+        height: 25vw;
+        margin: 20px auto;
+    }
+
+    .img {
+        width: 25vw;
+        height: 25vw;
+    }
+
+    #editProfileForm {
+        width: 80%;
+        margin-left: 10%;
+    }
+}
+
+@media (max-width: 576px) {
+    .nav-bar {
+        height: 8vh;
+    }
+
+    .title {
+        font-size: 18px;
+    }
+
+    .contenedorRegistro, .contenedorLogin {
+        width: 90vw;
+        margin-top: 30%;
+    }
+
+    .contenedorRegistro input, .contenedorLogin input {
+        width: 70vw;
+    }
+
+    #btn-register, #btn-login, #btn-create-post {
+        width: 30vw;
+    }
+
     .post {
+        padding: 15px;
+    }
+
+    .post-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .post-footer {
+        flex-wrap: wrap;
+    }
+
+    .post-footer button {
+        width: 45%;
+    }
+
+    .comentarios {
+        width: 90vw;
+        height: 40vh;
+    }
+
+    .comentario-texto {
+        width: 80vw;
+    }
+
+    .photoPerfil {
+        width: 35vw;
+        height: 35vw;
+    }
+
+    .img {
+        width: 35vw;
+        height: 35vw;
+    }
+
+    #btn-edit, #btn-close, #btn-eliminar {
+        width: 35vw;
+    }
+
+    .modal-content {
+        width: 90%;
+        margin: 25% auto;
+    }
+
+    .modal-buttons button {
+        width: 40vw;
+    }
+
+    .search-container {
+        flex-direction: column;
+    }
+
+    #searchInput {
+        width: 80vw;
+    }
+}
+
+@media (max-width: 320px) {
+    .title {
+        font-size: 16px;
+    }
+
+    .contenedorRegistro, .contenedorLogin {
+        margin-top: 35%;
+    }
+
+    #btn-register, #btn-login, #btn-create-post {
+        width: 40vw;
+    }
+
+    .post-footer button {
         width: 100%;
-    }
-
-    .imagenLogo {
-        display: none;
-    }
-
-    .iconos {
-        display: none;
-    }
-
-    .Login {
-        display: none;
-    }
-
-    .post-user-image {
-        width: 8vw;
-        height: 7vh;
     }
 }

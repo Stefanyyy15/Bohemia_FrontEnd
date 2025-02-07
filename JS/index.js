@@ -67,7 +67,9 @@ function mostrarPosts(posts) {
                   <button class="btn-like" data-post-id="${post.postId}">
                       <i class="fa fa-heart"></i> <span class="like-count">0</span> Likes
                   </button>
-                  <button class="btn-comment"><i class="fa fa-comment"></i> Comment</button>
+                  <button class="btn-comment" data-post-id="${post.postId}">
+                    <i class="fa fa-comment"></i> <span class="comment-count">0</span> Comments
+                    </button>
               </div>
               <div class="comentarios" style="display: none;"></div>
               <div class="comentario-input" style="display: none;">
@@ -78,6 +80,8 @@ function mostrarPosts(posts) {
 
         contenedorPost.appendChild(postDiv);
         obtenerLikes(post.postId);
+        obtenerCantidadComentarios(post.postId); 
+
         postDiv.querySelector(".btn-like").addEventListener("click", () => {
             agregarLike(post.postId);
         });
@@ -167,19 +171,51 @@ async function obtenerComentarios(postId) {
             }
         });
 
+        const text = await response.text();
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            console.error('Error loading comments:', response.status, text);
+            return;
         }
 
-        const data = await response.json();
+        if (!text) {
+            console.error("Empty response body");
+            return;
+        }
+
+        const data = JSON.parse(text); 
         mostrarComentariosEnInterfaz(postId, data);
     } catch (error) {
         console.error('Error loading post comments ' + postId + ':', error);
+    }
+}
+
+async function obtenerCantidadComentarios(postId) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/comment/post/${postId}`, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token"),
+            },
+        });
+
+        const text = await response.text();
+        if (!response.ok) {
+            console.error("Error getting comments count:", response.status, text);
+            return;
+        }
+
+        if (!text) {
+            console.log("No comments found for this post.");
+            return;
+        }
+
+        const comentarios = JSON.parse(text); 
         const postDiv = document.getElementById(`post-${postId}`);
         if (postDiv) {
-            const comentariosDiv = postDiv.querySelector(".comentarios");
-            comentariosDiv.innerHTML = '<p class="error-comentarios"></p>';
+            const commentCountElement = postDiv.querySelector(".comment-count");
+            commentCountElement.textContent = comentarios.length || 0;
         }
+    } catch (error) {
+        console.error("Error in request for comments count:", error);
     }
 }
 
@@ -196,6 +232,8 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
         return;
     }
 
+    const user = JSON.parse(localStorage.getItem("user"));
+
     comentarios.forEach(comentario => {
         const comentarioElement = document.createElement('div');
         comentarioElement.classList.add('comentario');
@@ -209,6 +247,18 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
             hour12: true
         });
 
+        let botonesEdicion = "";
+        if (user.id_user === comentario.user.id_user) {
+            botonesEdicion = `
+                <button class="eliminar-comentario" id="botonesComment"><i class="fa-solid fa-trash fa-1x"></i></button>
+                <button class="editar-comentario" id="botonesComment"><i class="fa-solid fa-pen-to-square fa-1x"></i></button>
+                <div class="editar-form" style="display: none;">
+                    <textarea class="textarea-editar">${comentario.comment}</textarea>
+                    <button class="guardar-edicion">Guardar</button>
+                </div>
+            `;
+        }
+
         comentarioElement.innerHTML = `
             <div class="comentario-header">
                 <div class="comentario-user-info">
@@ -221,41 +271,38 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
             </div>
             <div class="comentario-contenido">
                 <p class="comentario-texto">${comentario.comment}</p>
-                <button class="eliminar-comentario" id="botonesComment"><i class="fa-solid fa-trash fa-1x"></i></button>
-                <button class="editar-comentario"  id="botonesComment"><i class="fa-solid fa-pen-to-square fa-1x"></i></button>
-                <div class="editar-form" style="display: none;">
-                    <textarea class="textarea-editar">${comentario.comment}</textarea>
-                    <button class="guardar-edicion">Guardar</button>
-                </div>
+                ${botonesEdicion}
             </div>
         `;
 
-        const eliminarBoton = comentarioElement.querySelector('.eliminar-comentario');
-        eliminarBoton.addEventListener('click', function () {
-            eliminarComentario(postId, comentario.id_comment);
-        });
+        if (user.id_user === comentario.user.id_user) {
+            const eliminarBoton = comentarioElement.querySelector('.eliminar-comentario');
+            eliminarBoton.addEventListener('click', function () {
+                eliminarComentario(postId, comentario.id_comment);
+            });
 
-        const editarBoton = comentarioElement.querySelector('.editar-comentario');
-        editarBoton.addEventListener('click', function () {
-            const editarForm = comentarioElement.querySelector('.editar-form');
-            const comentarioTexto = comentarioElement.querySelector('.comentario-texto');
+            const editarBoton = comentarioElement.querySelector('.editar-comentario');
+            editarBoton.addEventListener('click', function () {
+                const editarForm = comentarioElement.querySelector('.editar-form');
+                const comentarioTexto = comentarioElement.querySelector('.comentario-texto');
 
-            comentarioTexto.style.display = 'none';
-            editarForm.style.display = 'block';
-        });
+                comentarioTexto.style.display = 'none';
+                editarForm.style.display = 'block';
+            });
 
-        const guardarEdicionBoton = comentarioElement.querySelector('.guardar-edicion');
-        guardarEdicionBoton.addEventListener('click', function () {
-            const nuevoComentario = comentarioElement.querySelector('.textarea-editar').value.trim();
-            if (nuevoComentario) {
-                // Llamar a la función para actualizar el comentario
-                editarComentario(postId, comentario.id_comment, nuevoComentario);
-            }
-        });
+            const guardarEdicionBoton = comentarioElement.querySelector('.guardar-edicion');
+            guardarEdicionBoton.addEventListener('click', function () {
+                const nuevoComentario = comentarioElement.querySelector('.textarea-editar').value.trim();
+                if (nuevoComentario) {
+                    editarComentario(postId, comentario.id_comment, nuevoComentario);
+                }
+            });
+        }
 
         contenedorComentarios.appendChild(comentarioElement);
     });
 }
+
 
 
 async function eliminarComentario(postId, commentId) {
@@ -271,6 +318,7 @@ async function eliminarComentario(postId, commentId) {
                 const comentarioElement = document.querySelector(`[data-comment-id="${commentId}"]`);
                 if (comentarioElement) {
                     comentarioElement.remove();
+                    await obtenerCantidadComentarios(postId);
                 }
             } else {
                 console.error("Error deleting comment");
@@ -287,6 +335,10 @@ async function agregarComentario(postId, contenidoComentario) {
         console.error("User not authenticated or without valid ID");
         return;
     }
+    if (contenidoComentario.length > 300) {
+        alert("The comment cannot exceed 300 characters.");
+        return;
+    }
 
     const comentario = {
         user: { id_user: user.id_user },
@@ -294,7 +346,6 @@ async function agregarComentario(postId, contenidoComentario) {
         commentDate: new Date(),
         post: { postId: parseInt(postId, 10) }
     };
-
 
     try {
         const respuesta = await fetch("http://localhost:8080/api/comment", {
@@ -307,8 +358,8 @@ async function agregarComentario(postId, contenidoComentario) {
         });
 
         if (respuesta.ok) {
-            const nuevoComentario = await respuesta.json();
-            mostrarComentarioEnInterfaz(postId, nuevoComentario);
+            await obtenerComentarios(postId);
+            await obtenerCantidadComentarios(postId);
         } else {
             console.error("Error adding comment");
         }
@@ -316,6 +367,8 @@ async function agregarComentario(postId, contenidoComentario) {
         console.error("Error in request", error);
     }
 }
+
+
 
 async function editarComentario(postId, commentId, nuevoComentario) {
     try {
@@ -345,8 +398,7 @@ async function editarComentario(postId, commentId, nuevoComentario) {
     }
 }
 
-
-
-
-
 obtenerPosts(urlPosts);
+
+
+

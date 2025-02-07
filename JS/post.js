@@ -46,6 +46,12 @@ async function agregarPost(url) {
     const content = document.getElementById("content").value.trim();
     const image = document.getElementById("image").value.trim() || null;
     const user = JSON.parse(localStorage.getItem('user'));
+
+    if (content.length === 0) {
+        alert("The content of the post is mandatory.");
+        return;
+    }
+
     if (content.length < 5 || content.length > 500) {
         alert("The content of the post must be between 5 and 500 characters.");
         return;
@@ -63,16 +69,17 @@ async function agregarPost(url) {
 
         if (postCreado) {
             console.log("Post created successfully:", postCreado);
-            alert("Post created successfully");
+            alert("Post creado exitosamente");
             window.location.href = "/Pages/Index.html";
         } else {
             alert("Error creating post");
         }
     } catch (error) {
-        console.error("Error in request:", error);
+        console.error("Request failed:", error);
         alert("An error occurred while trying to create the post.");
     }
 }
+
 
 
 document.getElementById("btn-create-post").addEventListener("click", () => {
