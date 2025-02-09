@@ -164,14 +164,15 @@ async function obtenerLikes(postId) {
 // COMENTARIOOOOOOOOOS ÑAÑAÑA
 
 async function obtenerComentarios(postId) {
+    console.log("Obteniendo comentarios para el post:", postId);
     try {
         const response = await fetch(`http://localhost:8080/api/comment/post/${postId}`, {
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
         });
 
         const text = await response.text();
+        console.log("Respuesta de la API:", text);
+
         if (!response.ok) {
             console.error('Error loading comments:', response.status, text);
             return;
@@ -182,12 +183,14 @@ async function obtenerComentarios(postId) {
             return;
         }
 
-        const data = JSON.parse(text); 
+        const data = JSON.parse(text);
+        console.log("Comentarios procesados:", data);
         mostrarComentariosEnInterfaz(postId, data);
     } catch (error) {
         console.error('Error loading post comments ' + postId + ':', error);
     }
 }
+
 
 async function obtenerCantidadComentarios(postId) {
     try {
@@ -297,6 +300,10 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
                     editarComentario(postId, comentario.id_comment, nuevoComentario);
                 }
             });
+            async function mostrarComentariosActualizados(postId) {
+    await obtenerComentarios(postId);
+}
+
         }
 
         contenedorComentarios.appendChild(comentarioElement);

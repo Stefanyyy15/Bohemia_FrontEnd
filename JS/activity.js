@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     let preloader = document.getElementById("preloader");
     preloader.classList.add("fade-out");
     setTimeout(() => {
@@ -6,20 +6,31 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("contenido").classList.remove("hidden");
     }, 500);
 
-    const userId = localStorage.getItem("id_user"); // Verifica el nombre correcto en localStorage
-    if (userId) {
-        getUnreadNotifications(userId);
+    const userId = localStorage.getItem("id_user");
+    const token = localStorage.getItem("token"); // Obtener el token desde el localStorage
+    if (userId && token) {
+        console.log("Obteniendo notificaciones para el usuario:", userId);
+        await getUnreadNotifications(userId, token); // Pasar token a la función
+    } else {
+        console.error("No se encontró ID de usuario o token en localStorage.");
     }
 });
 
-async function getUnreadNotifications(userId) {
+async function getUnreadNotifications(userId, token) {
     try {
-        const response = await fetch(`/api/notifications/unread/${userId}`);
+        const response = await fetch(`http://localhost:8080/api/notification/unread/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Enviar el token con la solicitud
+            }
+        });
+
         if (!response.ok) {
             const errorMessage = await response.text();
             throw new Error(`Error ${response.status}: ${errorMessage}`);
         }
+
         const notifications = await response.json();
+        console.log("Notificaciones recibidas:", notifications);
         displayNotifications(notifications);
     } catch (error) {
         console.error("Error al obtener notificaciones:", error);
@@ -28,9 +39,9 @@ async function getUnreadNotifications(userId) {
 
 function displayNotifications(notifications) {
     const container = document.getElementById("notifications-container");
-    container.innerHTML = ""; // Limpiar antes de agregar nuevas
+    container.innerHTML = "";
 
-    if (notifications.length === 0) {
+    if (!notifications || notifications.length === 0) {
         container.innerHTML = "<p>No tienes notificaciones nuevas</p>";
         return;
     }
@@ -40,16 +51,21 @@ function displayNotifications(notifications) {
         notificationItem.classList.add("notification");
         notificationItem.innerHTML = `
             <p>${notification.message}</p>
-            <button onclick="markAsRead(${notification.id_notification}, this)">Marcar como leída</button>
+            <button onclick="markAsRead(${notification.id}, this)">Marcar como leída</button>
         `;
         container.appendChild(notificationItem);
     });
 }
 
 async function markAsRead(notificationId, button) {
+    const token = localStorage.getItem("token"); // Obtener el token desde el localStorage
+
     try {
-        const response = await fetch(`/api/notifications/read/${notificationId}`, {
+        const response = await fetch(`http://localhost:8080/api/notification/read/${notificationId}`, {
             method: "PUT",
+            headers: {
+                'Authorization': `Bearer ${token}` // Enviar el token con la solicitud
+            }
         });
 
         if (!response.ok) {
@@ -57,7 +73,7 @@ async function markAsRead(notificationId, button) {
             throw new Error(`Error ${response.status}: ${errorMessage}`);
         }
 
-        // Ocultar la notificación después de marcarla como leída
+        console.log(`Notificación ${notificationId} marcada como leída.`);
         button.parentElement.remove();
     } catch (error) {
         console.error("Error al marcar como leída:", error);

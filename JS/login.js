@@ -7,7 +7,6 @@ window.addEventListener("load", function () {
     }, 1000);
 });
 
-
 document.addEventListener("DOMContentLoaded", function () {
     const passwordField = document.getElementById("password");
     const toggleButton = document.getElementById("togglePassword");
@@ -53,8 +52,6 @@ const peticionGet = async (url) => {
     }
 }
 
-var token = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjYW1wdXNjbCIsInN1YiI6IlBhekVuRWxBcmlwb3JvQGVtYWlsLmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3MzgyNTM2OTIsImV4cCI6MTczOTExNzY5Mn0.NF7WvRmMlRBj5qJ5BciFg2nT_Hs02WhhyMLdjSX7euf9Vx9X_zV914fxWPkNuQJJO7qZ0_nYNzh7j3GmLVxmgw';
-
 async function peticionPost(url, data, token) {
     try {
         const respuesta = await fetch(url, {
@@ -97,8 +94,16 @@ const loginUsuario = async (email, password) => {
         }
 
         const data = await respuesta.json();
+        
+        // Asegurarse de que los datos están bien
+        console.log(data);
+
+        // Almacenar los datos en localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("id_user", data.user.id_user); // Sin JSON.stringify
+
+        console.log("ID del usuario almacenado:", localStorage.getItem("id_user"));
 
         alert("Login successful.");
         window.location.href = "/Pages/Index.html";
@@ -111,6 +116,7 @@ const loginUsuario = async (email, password) => {
     }
 };
 
+
 // Manejo del botón de login
 document.getElementById("btn-login").addEventListener("click", () => {
     const email = document.getElementById("mail").value;
@@ -122,5 +128,3 @@ document.getElementById("btn-login").addEventListener("click", () => {
         alert("Please enter your email and password.");
     }
 });
-
-
