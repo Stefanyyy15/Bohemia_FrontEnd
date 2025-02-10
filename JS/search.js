@@ -8,7 +8,7 @@ const searchUsers = async (event) => {
 
     if (!token) {
         alert("No estás autenticado. Inicia sesión.");
-        window.location.href = "../login.html";
+        window.location.href = "../index.html";
         return;
     }
 
@@ -166,7 +166,7 @@ async function dejarDeSeguirUsuario(targetUserId) {
 
     if (!token || !currentUserId) {
         alert("No estás autenticado.");
-        window.location.href = "../login.html";
+        window.location.href = "../index.html";
         return;
     }
 

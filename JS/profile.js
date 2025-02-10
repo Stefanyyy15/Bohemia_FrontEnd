@@ -13,7 +13,7 @@ const peticionAutenticada = async (url, metodo = "GET", data = null) => {
     const token = obtenerToken();
     if (!token) {
         alert("No estás autenticado.");
-        window.location.href = "./login.html";
+        window.location.href = "./index.html";
         return null;
     }
 
@@ -35,7 +35,7 @@ const peticionAutenticada = async (url, metodo = "GET", data = null) => {
         if (respuesta.status === 401) {
             alert("Session expired. Please log in again.");
             localStorage.removeItem("token");
-            window.location.href = "./login.html";
+            window.location.href = "./index.html";
             return null;
         }
 
@@ -52,7 +52,7 @@ const showUserProfile = () => {
     let token = localStorage.getItem('token');
     if (!token) {
         alert("No listings found. Please log in.");
-        window.location.href = '../login.html';
+        window.location.href = '../index.html';
         return;
     }
     if (token.startsWith('Bearer ')) {
@@ -104,7 +104,7 @@ const showUserProfile = () => {
             console.error('Error:', error);
             if (error.message.includes('401')) {
                 alert('Session expired. Please log in again.');
-                window.location.href = '../login.html';
+                window.location.href = '../index.html';
             } else {
                 alert('Error loading profile. Please try again.');
             }
@@ -115,7 +115,7 @@ const showUserProfile = () => {
 function cerrarSesion() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    window.location.href = "../login.html";
+    window.location.href = "../index.html";
 }
 
 
@@ -257,7 +257,7 @@ async function eliminarPerfil() {
             localStorage.removeItem("user");
             localStorage.removeItem("token");
             alert("Your profile has been successfully deleted.");
-            window.location.href = "../login.html";
+            window.location.href = "../index.html";
         } else {
             const errorData = await response.json();
             alert(`Error deleting profile: ${errorData.message || "Please try again"}`);

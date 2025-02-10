@@ -70,7 +70,7 @@ async function agregarPost(url) {
         if (postCreado) {
             console.log("Post created successfully:", postCreado);
             alert("Post created successfully");
-            window.location.href = "/Pages/Index.html";
+            window.location.href = "/Pages/inicio.html";
         } else {
             alert("Error creating post");
         }

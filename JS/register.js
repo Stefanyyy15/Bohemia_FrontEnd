@@ -91,7 +91,7 @@ async function agregarUsuario(url) {
         if (usuarioCreado) {
             console.log("User added successfully:", usuarioCreado);
             alert("User added successfully:");
-            window.location.href = "../login.html";
+            window.location.href = "../index.html";
         } else {
             alert("Error registering user");
         }
