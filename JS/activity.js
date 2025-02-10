@@ -7,20 +7,23 @@ document.addEventListener("DOMContentLoaded", async function () {
     }, 500);
 
     const userId = localStorage.getItem("id_user");
-    const token = localStorage.getItem("token"); // Obtener el token desde el localStorage
+    const token = localStorage.getItem("token"); 
+
     if (userId && token) {
         console.log("Obteniendo notificaciones para el usuario:", userId);
-        await getUnreadNotifications(userId, token); // Pasar token a la función
+        await getUserNotifications(userId, token); 
     } else {
         console.error("No se encontró ID de usuario o token en localStorage.");
     }
 });
 
-async function getUnreadNotifications(userId, token) {
+async function getUserNotifications(userId, token) {
     try {
-        const response = await fetch(`http://localhost:8080/api/notification/unread/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/notification/users/${userId}`, {
+            method: "GET",
             headers: {
-                'Authorization': `Bearer ${token}` // Enviar el token con la solicitud
+                "Authorization": `Bearer ${token}`, 
+                "Content-Type": "application/json"
             }
         });
 
@@ -58,13 +61,14 @@ function displayNotifications(notifications) {
 }
 
 async function markAsRead(notificationId, button) {
-    const token = localStorage.getItem("token"); // Obtener el token desde el localStorage
+    const token = localStorage.getItem("token");
 
     try {
         const response = await fetch(`http://localhost:8080/api/notification/read/${notificationId}`, {
             method: "PUT",
             headers: {
-                'Authorization': `Bearer ${token}` // Enviar el token con la solicitud
+                "Authorization": `Bearer ${token}`, 
+                "Content-Type": "application/json"
             }
         });
 
@@ -74,7 +78,7 @@ async function markAsRead(notificationId, button) {
         }
 
         console.log(`Notificación ${notificationId} marcada como leída.`);
-        button.parentElement.remove();
+        button.parentElement.remove(); 
     } catch (error) {
         console.error("Error al marcar como leída:", error);
     }

@@ -300,9 +300,6 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
                     editarComentario(postId, comentario.id_comment, nuevoComentario);
                 }
             });
-            async function mostrarComentariosActualizados(postId) {
-    await obtenerComentarios(postId);
-}
 
         }
 
@@ -355,6 +352,7 @@ async function agregarComentario(postId, contenidoComentario) {
     };
 
     try {
+        // Enviar primero al servidor
         const respuesta = await fetch("http://localhost:8080/api/comment", {
             method: "POST",
             headers: {
@@ -365,8 +363,89 @@ async function agregarComentario(postId, contenidoComentario) {
         });
 
         if (respuesta.ok) {
-            await obtenerComentarios(postId);
-            await obtenerCantidadComentarios(postId);
+            const nuevoComentario = await respuesta.json();
+            const postDiv = document.getElementById(`post-${postId}`);
+            
+            if (postDiv) {
+                const contenedorComentarios = postDiv.querySelector(".comentarios");
+                contenedorComentarios.style.display = "block";
+                
+                // Actualizar el contador
+                const commentCountElement = postDiv.querySelector(".comment-count");
+                const currentCount = parseInt(commentCountElement.textContent || "0");
+                commentCountElement.textContent = currentCount + 1;
+
+                // Crear el elemento del comentario
+                const comentarioElement = document.createElement('div');
+                comentarioElement.classList.add('comentario');
+                comentarioElement.setAttribute("data-comment-id", nuevoComentario.id_comment);
+
+                let userImage = user.profilePhoto
+                    ? `<img src="${user.profilePhoto}" alt="Foto de perfil" class="comment-user-image"/>`
+                    : `<img src="../background/fotoPerfilPredeterminada.png" alt="Foto de perfil" class="comment-user-image"/>`;
+
+                const fechaLocal = new Date().toLocaleString("es-ES", { hour12: true });
+
+                comentarioElement.innerHTML = `
+                    <div class="comentario-header">
+                        <div class="comentario-user-info">
+                            <div class="imageUsername">
+                                ${userImage}
+                                <span class="comentario-usuario">${user.username}</span>
+                            </div>
+                            <h6 class="comentario-fecha">${fechaLocal}</h6>
+                        </div>
+                    </div>
+                    <div class="comentario-contenido">
+                        <p class="comentario-texto">${contenidoComentario}</p>
+                        <button class="eliminar-comentario" id="botonesComment">
+                            <i class="fa-solid fa-trash fa-1x"></i>
+                        </button>
+                        <button class="editar-comentario" id="botonesComment">
+                            <i class="fa-solid fa-pen-to-square fa-1x"></i>
+                        </button>
+                        <div class="editar-form" style="display: none;">
+                            <textarea class="textarea-editar">${contenidoComentario}</textarea>
+                            <button class="guardar-edicion">Guardar</button>
+                        </div>
+                    </div>
+                `;
+
+                // Insertar al principio del contenedor
+                if (contenedorComentarios.firstChild) {
+                    contenedorComentarios.insertBefore(comentarioElement, contenedorComentarios.firstChild);
+                } else {
+                    contenedorComentarios.appendChild(comentarioElement);
+                }
+
+                // Agregar event listeners
+                const eliminarBoton = comentarioElement.querySelector('.eliminar-comentario');
+                eliminarBoton.addEventListener('click', () => {
+                    eliminarComentario(postId, nuevoComentario.id_comment);
+                });
+
+                const editarBoton = comentarioElement.querySelector('.editar-comentario');
+                editarBoton.addEventListener('click', function() {
+                    const editarForm = comentarioElement.querySelector('.editar-form');
+                    const comentarioTexto = comentarioElement.querySelector('.comentario-texto');
+                    comentarioTexto.style.display = 'none';
+                    editarForm.style.display = 'block';
+                });
+
+                const guardarEdicionBoton = comentarioElement.querySelector('.guardar-edicion');
+                guardarEdicionBoton.addEventListener('click', function() {
+                    const nuevoTexto = comentarioElement.querySelector('.textarea-editar').value.trim();
+                    if (nuevoTexto) {
+                        editarComentario(postId, nuevoComentario.id_comment, nuevoTexto);
+                    }
+                });
+
+                // Limpiar el input
+                const comentarioInput = postDiv.querySelector(".comentario-texto");
+                if (comentarioInput) {
+                    comentarioInput.value = "";
+                }
+            }
         } else {
             console.error("Error adding comment");
         }
@@ -374,8 +453,6 @@ async function agregarComentario(postId, contenidoComentario) {
         console.error("Error in request", error);
     }
 }
-
-
 
 async function editarComentario(postId, commentId, nuevoComentario) {
     try {
