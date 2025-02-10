@@ -59,7 +59,7 @@ const showUserProfile = () => {
         token = token.slice(7);
     }
 
-    fetch('http://localhost:8080/api/users/profile', {
+    fetch('http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/profile', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -129,7 +129,7 @@ async function obtenerMisPosts() {
         return;
     }
 
-    const url = `http://localhost:8080/api/post/user/${user.id_user}`;
+    const url = `http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/user/${user.id_user}`;
 
     try {
         const respuesta = await fetch(url, {
@@ -204,7 +204,6 @@ function mostrarMisPosts(posts) {
 
         contenedorPost.appendChild(postDiv);
 
-        // Añadimos el evento de edición
         const btnEdit = postDiv.querySelector('.btn-edit');
         btnEdit.addEventListener('click', (e) => {
             const postId = e.target.closest('button').dataset.postId;
@@ -215,8 +214,6 @@ function mostrarMisPosts(posts) {
             }
             editarPost(postId);
         });
-
-        // Añadimos el evento de eliminación para cada botón
         const btnDelete = postDiv.querySelector('.btn-delete');
         btnDelete.addEventListener('click', (e) => {
             const postId = e.target.closest('button').dataset.postId;
@@ -248,7 +245,7 @@ async function eliminarPerfil() {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${userId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -312,7 +309,7 @@ async function guardarCambios() {
     };
 
     try {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${userId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -425,7 +422,7 @@ function crearModalEditarPost() {
         const nuevaImagen = document.getElementById('editPostImage').value;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+            const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -457,7 +454,7 @@ function crearModalEditarPost() {
 
 async function editarPost(postId) {
     try {
-        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -500,7 +497,7 @@ async function guardarPostEditado(postId) {
     };
 
     try {
-        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
             method: 'PUT', 
             headers: {
                 'Content-Type': 'application/json',
@@ -521,7 +518,6 @@ async function guardarPostEditado(postId) {
 
     } catch (error) {
         console.error('Error updating post:', error);
-        alert('The post could not be updated');
     }
 }
 
@@ -538,7 +534,7 @@ async function eliminarPost(postId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -551,7 +547,7 @@ async function eliminarPost(postId) {
         }
         
         document.getElementById(postId)?.remove();
-        alert('Post eliminado correctamente');
+        alert('Post delete successfully');
         window.location.href = "./profile.html";
 
     } catch (error) {
@@ -585,7 +581,7 @@ function createEditPostModal() {
         const nuevaImagen = document.getElementById('editPostImage').value;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
+            const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -607,7 +603,6 @@ function createEditPostModal() {
 
         } catch (error) {
             console.error('Error updating post:', error);
-            alert('Could not update the post');
         }
     });
 
@@ -633,7 +628,7 @@ async function actualizarContadoresSeguidores() {
     if (!currentUserId) return;
 
     try {
-        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${currentUserId}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -672,7 +667,7 @@ async function showUserList(type) {
     if (!userId) return;
 
     try {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/${type}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${userId}/${type}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 

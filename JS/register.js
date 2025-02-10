@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // PETICIONES A LA API 
 
-const urlUser = "http://localhost:8080/api/users";
+const urlUser = "http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users";
 
 
 async function peticionPost(url, data) {

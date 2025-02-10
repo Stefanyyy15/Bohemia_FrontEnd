@@ -7,7 +7,7 @@ window.addEventListener("load", function () {
     }, 1000);
 });
 
-const urlPost = "http://localhost:8080/api/post";
+const urlPost = "http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post";
 
 async function peticionPost(url, data) {
     try {
@@ -69,7 +69,7 @@ async function agregarPost(url) {
 
         if (postCreado) {
             console.log("Post created successfully:", postCreado);
-            alert("Post creado exitosamente");
+            alert("Post created successfully");
             window.location.href = "/Pages/Index.html";
         } else {
             alert("Error creating post");

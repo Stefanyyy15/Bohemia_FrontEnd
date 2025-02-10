@@ -7,7 +7,8 @@ window.addEventListener("load", function () {
     }, 1000);
 });
 
-const urlPosts = "http://localhost:8080/api/post";
+const urlPosts = "http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post";
+
 
 
 async function obtenerPosts(url) {
@@ -116,7 +117,7 @@ function mostrarPosts(posts) {
 async function agregarLike(postId) {
     try {
         const user = JSON.parse(localStorage.getItem("user"));
-        const response = await fetch(`http://localhost:8080/api/reaction/like`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/reaction/like`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -140,7 +141,7 @@ async function agregarLike(postId) {
 
 async function obtenerLikes(postId) {
     try {
-        const response = await fetch(`http://localhost:8080/api/reaction/post/${postId}/likes`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/reaction/post/${postId}/likes`, {
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token"),
             },
@@ -166,7 +167,7 @@ async function obtenerLikes(postId) {
 async function obtenerComentarios(postId) {
     console.log("Obteniendo comentarios para el post:", postId);
     try {
-        const response = await fetch(`http://localhost:8080/api/comment/post/${postId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/comment/post/${postId}`, {
             headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
         });
 
@@ -194,7 +195,7 @@ async function obtenerComentarios(postId) {
 
 async function obtenerCantidadComentarios(postId) {
     try {
-        const response = await fetch(`http://localhost:8080/api/comment/post/${postId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/comment/post/${postId}`, {
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token"),
             },
@@ -312,7 +313,7 @@ function mostrarComentariosEnInterfaz(postId, comentarios) {
 async function eliminarComentario(postId, commentId) {
     if (confirm("Are you sure you want to delete this comment?")) {
         try {
-            const respuesta = await fetch(`http://localhost:8080/api/comment/${commentId}`, {
+            const respuesta = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/comment/${commentId}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + localStorage.getItem("token"),
@@ -352,8 +353,7 @@ async function agregarComentario(postId, contenidoComentario) {
     };
 
     try {
-        // Enviar primero al servidor
-        const respuesta = await fetch("http://localhost:8080/api/comment", {
+        const respuesta = await fetch("http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/comment", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -456,7 +456,7 @@ async function agregarComentario(postId, contenidoComentario) {
 
 async function editarComentario(postId, commentId, nuevoComentario) {
     try {
-        const respuesta = await fetch(`http://localhost:8080/api/comment/${commentId}`, {
+        const respuesta = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/comment/${commentId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

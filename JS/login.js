@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // PETICIONES A LA API 
 
-const urlUser = "http://localhost:8080/api/users";
+const urlUser = "http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users";
 
 const peticionGet = async (url) => {
     try {
@@ -80,7 +80,7 @@ async function peticionPost(url, data, token) {
 // FUNCION PARA LA PAGINA LOGIN
 const loginUsuario = async (email, password) => {
     try {
-        const respuesta = await fetch("http://localhost:8080/login", {
+        const respuesta = await fetch("http://localhost:8080/bohemia-0.0.1-SNAPSHOT/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"

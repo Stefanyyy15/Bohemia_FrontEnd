@@ -13,7 +13,7 @@ const searchUsers = async (event) => {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/users/search?term=${encodeURIComponent(searchInput)}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/search?term=${encodeURIComponent(searchInput)}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -97,7 +97,7 @@ async function verificarEstadoSeguimiento(targetUserId) {
     if (!currentUserId || !targetUserId) return;
 
     try {
-        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/following`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${currentUserId}/following`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -136,7 +136,7 @@ async function seguirUsuario(targetUserId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/follow/${targetUserId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${currentUserId}/follow/${targetUserId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -171,7 +171,7 @@ async function dejarDeSeguirUsuario(targetUserId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/unfollow/${targetUserId}`, {
+        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${currentUserId}/unfollow/${targetUserId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
