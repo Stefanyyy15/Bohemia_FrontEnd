@@ -7,14 +7,18 @@ window.addEventListener("load", function () {
     }, 1000);
 });
 
-const urlPost = "http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post";
+const urlPost = "http://localhost:8080/api/post";
 
 async function peticionPost(url, data) {
     try {
         const token = localStorage.getItem('token');
 
         if (!token) {
-            alert("There is no valid token. Please log in.");
+            Swal.fire({
+                icon: "error",
+                title: "There is no valid token. Please log in.",
+                confirmButtonColor: "#6f523b"
+            });
             return;
         }
         const respuesta = await fetch(url, {
@@ -48,12 +52,18 @@ async function agregarPost(url) {
     const user = JSON.parse(localStorage.getItem('user'));
 
     if (content.length === 0) {
-        alert("The content of the post is mandatory.");
+        Swal.fire({
+            title: "The content of the post is mandatory.",
+            confirmButtonColor: "#6f523b"
+        });
         return;
     }
 
     if (content.length < 5 || content.length > 500) {
-        alert("The content of the post must be between 5 and 500 characters.");
+        Swal.fire({
+            title: "The content of the post must be between 5 and 500 characters.",
+            confirmButtonColor: "#6f523b"
+        });
         return;
     }
 
@@ -69,14 +79,30 @@ async function agregarPost(url) {
 
         if (postCreado) {
             console.log("Post created successfully:", postCreado);
-            alert("Post created successfully");
-            window.location.href = "/Pages/inicio.html";
+            Swal.fire({
+                title: "Post created successfully!",
+                icon: "success",
+                draggable: true,
+                confirmButtonColor: "#6f523b"
+            }).then(() => {
+                window.location.href = "/Pages/Index.html"; 
+            });
         } else {
-            alert("Error creating post");
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Error creating post",
+                confirmButtonColor: "#6f523b"
+            });
         }
     } catch (error) {
         console.error("Request failed:", error);
-        alert("An error occurred while trying to create the post.");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "An error occurred while trying to create the post.",
+            confirmButtonColor: "#6f523b"
+        });
     }
 }
 

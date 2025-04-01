@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 async function getUserNotifications(userId, token) {
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/notification`, {
+        const response = await fetch(`http://localhost:8080/api/notification/users/${userId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`, 
@@ -54,7 +54,7 @@ function displayNotifications(notifications) {
         notificationItem.classList.add("notification");
         notificationItem.innerHTML = `
             <p>${notification.message}</p>
-            <button class="btnNotification" onclick="markAsRead(${notification.id}, this)">Mark as read</button>
+            <button onclick="markAsRead(${notification.id}, this)">Marcar como leída</button>
         `;
         container.appendChild(notificationItem);
     });
@@ -64,7 +64,7 @@ async function markAsRead(notificationId, button) {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/notification/read/${notificationId}`, {
+        const response = await fetch(`http://localhost:8080/api/notification/read/${notificationId}`, {
             method: "PUT",
             headers: {
                 "Authorization": `Bearer ${token}`, 

@@ -12,8 +12,11 @@ const obtenerToken = () => localStorage.getItem("token");
 const peticionAutenticada = async (url, metodo = "GET", data = null) => {
     const token = obtenerToken();
     if (!token) {
-        alert("No estás autenticado.");
-        window.location.href = "./index.html";
+        Swal.fire({
+            title: "You are not authenticated.",
+            confirmButtonColor: "#6f523b"
+        });
+        window.location.href = "./login.html";
         return null;
     }
 
@@ -33,9 +36,12 @@ const peticionAutenticada = async (url, metodo = "GET", data = null) => {
         const respuesta = await fetch(url, opciones);
 
         if (respuesta.status === 401) {
-            alert("Session expired. Please log in again.");
+            Swal.fire({
+                title: "Session expired. Please log in again.",
+                confirmButtonColor: "#6f523b"
+            });
             localStorage.removeItem("token");
-            window.location.href = "./index.html";
+            window.location.href = "./login.html";
             return null;
         }
 
@@ -51,15 +57,19 @@ const peticionAutenticada = async (url, metodo = "GET", data = null) => {
 const showUserProfile = () => {
     let token = localStorage.getItem('token');
     if (!token) {
-        alert("No listings found. Please log in.");
-        window.location.href = '../index.html';
+        Swal.fire({
+            icon: "info",
+            title: "No listings found. Please log in.",
+            confirmButtonColor: "#6f523b"
+        });
+        window.location.href = '../login.html';
         return;
     }
     if (token.startsWith('Bearer ')) {
         token = token.slice(7);
     }
 
-    fetch('http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/profile', {
+    fetch('http://localhost:8080/api/users/profile', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -103,10 +113,19 @@ const showUserProfile = () => {
         .catch(error => {
             console.error('Error:', error);
             if (error.message.includes('401')) {
-                alert('Session expired. Please log in again.');
-                window.location.href = '../index.html';
+                Swal.fire({
+                    icon: "info",
+                    title: "Session expired. Please log in again.",
+                    confirmButtonColor: "#6f523b"
+                });
+                window.location.href = '../login.html';
             } else {
-                alert('Error loading profile. Please try again.');
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Error loading profile. Please try again.",
+                    confirmButtonColor: "#6f523b"
+                });
             }
         });
 }
@@ -115,7 +134,7 @@ const showUserProfile = () => {
 function cerrarSesion() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    window.location.href = "../index.html";
+    window.location.href = "../login.html";
 }
 
 
@@ -129,7 +148,7 @@ async function obtenerMisPosts() {
         return;
     }
 
-    const url = `http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/user/${user.id_user}`;
+    const url = `http://localhost:8080/api/post/user/${user.id_user}`;
 
     try {
         const respuesta = await fetch(url, {
@@ -204,6 +223,7 @@ function mostrarMisPosts(posts) {
 
         contenedorPost.appendChild(postDiv);
 
+        // Añadimos el evento de edición
         const btnEdit = postDiv.querySelector('.btn-edit');
         btnEdit.addEventListener('click', (e) => {
             const postId = e.target.closest('button').dataset.postId;
@@ -214,6 +234,8 @@ function mostrarMisPosts(posts) {
             }
             editarPost(postId);
         });
+
+        // Añadimos el evento de eliminación para cada botón
         const btnDelete = postDiv.querySelector('.btn-delete');
         btnDelete.addEventListener('click', (e) => {
             const postId = e.target.closest('button').dataset.postId;
@@ -233,19 +255,33 @@ document.addEventListener('DOMContentLoaded', () => {
 async function eliminarPerfil() {
     const token = obtenerToken();
     const user = JSON.parse(localStorage.getItem("user"));
+    
     if (!user || !user.id_user) {
-        alert("Failed to get user ID.");
+        Swal.fire({
+            title: "Failed to get user ID.",
+            confirmButtonColor: "#6f523b"
+        });
         return;
     }
 
     const userId = user.id_user;
-    const confirmacion = confirm("¿Are you sure you want to delete your profile? This action is irreversible.");
-    if (!confirmacion) {
+
+    const confirmacion = await Swal.fire({
+        title: "Are you sure you want to delete your profile? This action is irreversible.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete",
+        cancelButtonText: "No, cancel",
+        confirmButtonColor: "#6f523b",
+        cancelButtonColor: "#3085d6"
+    });
+
+    if (!confirmacion.isConfirmed) {
         return;
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -256,17 +292,34 @@ async function eliminarPerfil() {
         if (response.ok) {
             localStorage.removeItem("user");
             localStorage.removeItem("token");
-            alert("Your profile has been successfully deleted.");
-            window.location.href = "../index.html";
+
+            await Swal.fire({
+                title: "Profile deleted successfully!",
+                icon: "success",
+                confirmButtonColor: "#6f523b"
+            });
+
+            window.location.href = "../login.html";
         } else {
             const errorData = await response.json();
-            alert(`Error deleting profile: ${errorData.message || "Please try again"}`);
+            Swal.fire({
+                icon: "error",
+                title: "Error deleting profile",
+                text: errorData.message || "Something went wrong! Please try again.",
+                confirmButtonColor: "#6f523b"
+            });
         }
     } catch (error) {
         console.error("Error deleting profile:", error);
-        alert("There was an error. Please try again.");
+        Swal.fire({
+            icon: "error",
+            title: "Error deleting profile",
+            text: "There was an error. Please try again.",
+            confirmButtonColor: "#6f523b"
+        });
     }
 }
+
 
 // EDITAR PERFIL MUAJAJ
 
@@ -275,7 +328,10 @@ async function guardarCambios() {
     const token = obtenerToken();
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id_user) {
-        alert("Failed to get user ID.");
+        Swal.fire({
+            title: "Failed to get user ID.",
+            confirmButtonColor: "#6f523b"
+        });
         return;
     }
 
@@ -290,12 +346,18 @@ async function guardarCambios() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!fullname || !username || !email) {
-        alert("Full name, username and email are required.");
+        Swal.fire({
+            title: "Full name, username and email are required.",
+            confirmButtonColor: "#6f523b"
+        });
         return;
     }
 
     if (!emailRegex.test(email)) {
-        alert("Please enter a valid email.");
+        Swal.fire({
+            title: "Please enter a valid email.",
+            confirmButtonColor: "#6f523b"
+        });
         return;
     }
 
@@ -309,7 +371,7 @@ async function guardarCambios() {
     };
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -319,7 +381,12 @@ async function guardarCambios() {
         });
 
         if (!response.ok) {
-            alert("There was an error saving changes.");
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "There was an error saving changes.",
+                confirmButtonColor: "#6f523b"
+            });
             return;
         }
 
@@ -344,12 +411,21 @@ async function guardarCambios() {
             }
 
             document.getElementById('oscuro').style.display = "none";
-
-            alert("Profile updated successfully.");
+            Swal.fire({
+                title: "Profile updated successfully!",
+                icon: "success",
+                draggable: true,
+                confirmButtonColor: "#6f523b"
+              });
         }
     } catch (error) {
         console.error("Error saving changes:", error);
-        alert("There was an error. Please try again.");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "There was an error. Please try again.",
+            confirmButtonColor: "#6f523b"
+        });
     }
 }
 
@@ -422,7 +498,7 @@ function crearModalEditarPost() {
         const nuevaImagen = document.getElementById('editPostImage').value;
 
         try {
-            const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
+            const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -439,11 +515,20 @@ function crearModalEditarPost() {
             }
             modal.style.display = 'none';
             obtenerMisPosts();
-
-            alert('Post updated successfully');
+            Swal.fire({
+                title: "Post updated successfully!",
+                icon: "success",
+                draggable: true,
+                confirmButtonColor: "#6f523b"
+              });
         } catch (error) {
             console.error('Error updating post:', error);
-            alert('The post could not be updated');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "The post could not be updated",
+                confirmButtonColor: "#6f523b"
+            });
         }
     });
 
@@ -454,7 +539,7 @@ function crearModalEditarPost() {
 
 async function editarPost(postId) {
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
+        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -486,7 +571,12 @@ async function editarPost(postId) {
 
     } catch (error) {
         console.error('Error loading post details:', error);
-        alert('The post could not be loaded for editing');
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "The post could not be loaded for editing",
+            confirmButtonColor: "#6f523b"
+        });
     }
 }
 
@@ -497,7 +587,7 @@ async function guardarPostEditado(postId) {
     };
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
+        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
             method: 'PUT', 
             headers: {
                 'Content-Type': 'application/json',
@@ -511,13 +601,24 @@ async function guardarPostEditado(postId) {
         }
 
         const updatedPost = await response.json();
-        alert('Post actualizado correctamente');
+        Swal.fire({
+            title: "Post updated successfully!",
+            icon: "success",
+            draggable: true,
+            confirmButtonColor: "#6f523b"
+          });
         
         document.getElementById('postContent').textContent = updatedPost.content;
         document.getElementById('postImage').src = updatedPost.image || 'default-image.png';
 
     } catch (error) {
         console.error('Error updating post:', error);
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "The post could not be updated",
+            confirmButtonColor: "#6f523b"
+        });
     }
 }
 
@@ -525,16 +626,26 @@ document.addEventListener('DOMContentLoaded', () => {
     crearModalEditarPost();
 });
 
-// Función para eliminar un post
 async function eliminarPost(postId) {
-    const confirmacion = confirm('¿Are you sure you want to delete this post?');
+    const result = await Swal.fire({
+        title: "Are you sure you want to delete this post?",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete",
+        confirmButtonColor: "#6f523b",
+        cancelButtonColor: "#3085d6"
+    });
 
-    if (!confirmacion) {
-        return;
+    if (!result.isConfirmed) {
+        Swal.fire({
+            title: "Changes are not saved",
+            icon: "info",
+            confirmButtonColor: "#6f523b" 
+        });
+        return; 
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
+        const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -545,16 +656,26 @@ async function eliminarPost(postId) {
         if (!response.ok) {
             throw new Error('Could not delete post');
         }
-        
+
         document.getElementById(postId)?.remove();
-        alert('Post delete successfully');
-        window.location.href = "./profile.html";
+        Swal.fire({
+            title: "Post successfully deleted!",
+            icon: "success",
+            confirmButtonColor: "#6f523b"
+        }).then(() => {
+            location.reload(); 
+        });
 
     } catch (error) {
-        console.error('Could not delete post:', error);
-        alert('Could not delete post');
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Could not delete post",
+            confirmButtonColor: "#6f523b"
+        });
     }
 }
+
 
 
 function createEditPostModal() {
@@ -581,7 +702,7 @@ function createEditPostModal() {
         const nuevaImagen = document.getElementById('editPostImage').value;
 
         try {
-            const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/post/${postId}`, {
+            const response = await fetch(`http://localhost:8080/api/post/${postId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -599,10 +720,21 @@ function createEditPostModal() {
             modal.style.display = 'none';
             obtenerMisPosts();
 
-            alert('Post updated successfully');
+            Swal.fire({
+                title: "Post updated successfully!",
+                icon: "success",
+                draggable: true,
+                confirmButtonColor: "#6f523b"
+              });
 
         } catch (error) {
             console.error('Error updating post:', error);
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Could not update the post",
+                confirmButtonColor: "#6f523b"
+            });
         }
     });
 
@@ -628,7 +760,7 @@ async function actualizarContadoresSeguidores() {
     if (!currentUserId) return;
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${currentUserId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -667,7 +799,7 @@ async function showUserList(type) {
     if (!userId) return;
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${userId}/${type}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}/${type}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 

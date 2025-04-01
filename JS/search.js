@@ -7,13 +7,18 @@ const searchUsers = async (event) => {
     const token = obtenerToken();
 
     if (!token) {
-        alert("No estás autenticado. Inicia sesión.");
-        window.location.href = "../index.html";
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "You are not authenticated. Sign in.",
+            confirmButtonColor: "#6f523b"
+        });
+        window.location.href = "../login.html";
         return;
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/search?term=${encodeURIComponent(searchInput)}`, {
+        const response = await fetch(`http://localhost:8080/api/users/search?term=${encodeURIComponent(searchInput)}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -29,7 +34,12 @@ const searchUsers = async (event) => {
         displaySearchResults(users);
     } catch (error) {
         console.error("Error en la búsqueda:", error);
-        alert("Hubo un problema al intentar buscar usuarios.");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "There was a problem trying to search for users.",
+            confirmButtonColor: "#6f523b"
+        });
     }
 };
 
@@ -97,7 +107,7 @@ async function verificarEstadoSeguimiento(targetUserId) {
     if (!currentUserId || !targetUserId) return;
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${currentUserId}/following`, {
+        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/following`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -131,12 +141,15 @@ async function seguirUsuario(targetUserId) {
     const currentUserId = obtenerIdUsuarioDesdeToken(token); 
 
     if (!token || !currentUserId) {
-        alert("No estás autenticado.");
+        Swal.fire({
+            title: "You are not authenticated.",
+            confirmButtonColor: "#6f523b"
+        });
         return;
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${currentUserId}/follow/${targetUserId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/follow/${targetUserId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -155,7 +168,12 @@ async function seguirUsuario(targetUserId) {
         await verificarEstadoSeguimiento(targetUserId);
     } catch (error) {
         console.error("Error al seguir usuario:", error);
-        alert("Error trying to track user");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Error trying to track user",
+            confirmButtonColor: "#6f523b"
+        });
     }
 }
 
@@ -165,13 +183,16 @@ async function dejarDeSeguirUsuario(targetUserId) {
     const currentUserId = obtenerIdUsuarioDesdeToken(token);
 
     if (!token || !currentUserId) {
-        alert("No estás autenticado.");
-        window.location.href = "../index.html";
+        Swal.fire({
+            title: "You are not authenticated.",
+            confirmButtonColor: "#6f523b"
+        });
+        window.location.href = "../login.html";
         return;
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/bohemia-0.0.1-SNAPSHOT/api/users/${currentUserId}/unfollow/${targetUserId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/unfollow/${targetUserId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -186,7 +207,12 @@ async function dejarDeSeguirUsuario(targetUserId) {
         verificarEstadoSeguimiento(targetUserId);
     } catch (error) {
         console.error("Error al dejar de seguir usuario:", error);
-        alert("Error trying to track user");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Error trying to track user",
+            confirmButtonColor: "#6f523b"
+        });
     }
 }
 

@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Glass Antiqua';
 }
 
 *,
@@ -935,32 +936,7 @@
     border-radius: 5px;
     cursor: pointer;
 }
-.notification{
-    font-family: 'Glass Antiqua';
-    color: #6f523b;
-    font-size: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 3%;
-    border-bottom-style: dotted;
-}
-.btnNotification{
-    padding: 10px 20px;
-    margin: 0 10px;
-    background: #6f523b;
-    color: white;
-    font-family: 'Glass Antiqua';
-    border: none;
-    padding: 5px 10px;
-    height: 5vh;
-    width: 6vw;
-    border-radius: 5px;
-    cursor: pointer;
-}
-#contentActivity{
-    margin-top: 5%;   
-}
+
 @media (max-width: 1200px) {
     .contenedorRegistro, .contenedorLogin {
         width: 50vw;
