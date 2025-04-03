@@ -80,9 +80,11 @@
     gap: 10px;
     width: 30vw;
     margin: auto;
-    margin-top: 15%;
+    margin-top: 18%;
 }
-
+#contentActivity{
+    margin-top: 8%;
+}
 #userForm {
     display: flex;
     flex-direction: column;
